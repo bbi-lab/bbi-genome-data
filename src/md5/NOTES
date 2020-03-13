@@ -1,0 +1,7 @@
+20200214 - bge
+
+These md5.[ch] files were copied  from the Gnu C library.
+(It appears that more recent files can be found at
+https://github.com/gcc-mirror/gcc/blob/master/libiberty/.)
+I wrote md5test.c to read a file and return the md5 checksum.
+It returns the same values as the Gnu md5sum program.

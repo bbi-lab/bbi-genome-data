@@ -1,0 +1,8 @@
+20200214 - bge
+
+squid consists of Sean Eddy's sequence utilities in C, which I
+downloaded from http://eddylab.org/software.html.
+
+I use parts of squid v1.9g in sequtil/md5_seq to read sequences
+individually from a fasta file. (It appears that squid excludes
+non-printing characters from the sequence it returns.)

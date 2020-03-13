@@ -1,0 +1,34 @@
+20200214 - bge
+
+** sequence utilities
+
+fasta_getseqs takes the name of a file with sequence names and
+              a fasta filename and writes the specified fasta
+              sequences to stdout.
+
+md5_seq writes the md5 checksum of each sequence in a sequence file
+        (I tried it only on fasta files.)
+
+
+** building
+    o  fasta_getseqs: type
+         make fasta_getseqs
+
+    o  md5_seq: type
+         make libsquid md5 md5_seq
+
+
+** md5_seq checks
+    o  compare base counts reported by md5_seq to the counts reported by
+       samtools faidx. They give the same count values.
+    o  extract chromosome 1 sequence into a file and compare the md5sum
+       obtained using 'md5sum' utility to the value obtained using
+       md5_seq. They are the same '2648ae1bacce4ec4b6cf337dcae37816'
+       with this h38 chr 1 sequence. Extract chr 1 sequence from the
+       distribution fasta file using the commands
+
+         fasta_getseqs chr.lst Homo_sapiens.GRCh38.dna.toplevel.fa > 1.fa
+         tail -n +2 1.fa | tr -d '\n' > 1.no_header_no_newline.fa
+         md5sum 1.no_header_no_newline.fa
+
+
