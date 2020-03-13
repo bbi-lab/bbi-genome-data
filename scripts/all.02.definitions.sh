@@ -8,8 +8,8 @@
 #
 # Staging directory.
 #
-#STAGE_DIR="/net/bbi/vol1/data/genomes/stage_dir"
-STAGE_DIR="/net/bbi/vol1/data/bge/genomes/nobackup/stage_dir"
+STAGE_DIR="/net/bbi/vol1/data/genomes/stage_dir"
+
 
 #
 # Output directories.

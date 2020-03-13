@@ -2,8 +2,7 @@
 
 #
 # Set organism to a distinct common name. The ORGANISM variable is
-# used to name the directories that will contain the output
-# genome-related files.
+# used to name the directories that will contain the output files.
 #
 ORGANISM="human"
 
@@ -18,19 +17,19 @@ FASTA_GZ="Homo_sapiens.GRCh38.dna.toplevel.fa.gz"
 #
 # Set the URL for the Ensembl directory that contains the compressed
 # genome GTF file and the related CHECKSUM and README files. And
-# set the name of the required compressed genome GTF file.
+# set the name of the required compressed GTF file.
 #
 ENSEMBL_GTF_URL="ftp.ensembl.org:/pub/release-99/gtf/homo_sapiens"
 GTF_GZ="Homo_sapiens.GRCh38.99.gtf.gz"
 
 #
 # The genome sequences selected for the alignments can be chosen by
-# checking the fasta headers for the 'REF' designation (do this by
+# checking the fasta headers for the 'REF' designation (do this
 # using the 'sequences_to_keep_ref()' function in genome.01.run.sh)
 # or by using an explicit list of required sequence names (do this
-# by using the 'sequences_to_keep_named()' function in
-# genome.01.run.sh). In the latter case, assign the required
-# sequence namess to the variable SEQUENCES_TO_KEEP_ALIGNER below.
+# using the 'sequences_to_keep_named()' function in
+# genome.01.run.sh). In the latter case, list the required
+# sequence names in the variable SEQUENCES_TO_KEEP_ALIGNER below.
 #
 SEQUENCES_TO_KEEP_ALIGNER="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT"
 
