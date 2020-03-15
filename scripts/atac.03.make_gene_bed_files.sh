@@ -142,6 +142,20 @@ function make_tss_file()
 }
 
 
+function compress_tss_temp_file()
+{
+  echo "Compress a copy of ${TSS_BED}.temp to make ${TSS_BED}.temp.bz2..." | tee -a ${LOG}
+  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  bzip2 -k ${TSS_BED}.temp
+  echo "Finished file compression" | tee -a ${LOG}
+  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo | tee -a ${LOG}
+
+  echo 'Done.' | tee -a ${LOG}
+  echo | tee -a ${LOG}
+}
+
+
 function make_gene_bodies_file()
 {
   echo "Make gene bodies bed file ${GENE_BODIES_PLUS_UPSTREAM_BED}.gz..." | tee -a ${LOG}
@@ -239,4 +253,20 @@ function make_gene_bodies_file()
   echo 'Done.' | tee -a ${LOG}
   echo | tee -a ${LOG}
 }
+
+
+function compress_gene_bodies_temp_file()
+{
+  echo "Compress a copy of ${GENE_BODIES_BED}.temp to make ${GENE_BODIES_BED}.temp.bz2..." | tee -a ${LOG}
+  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  bzip2 -k ${GENE_BODIES_BED}.temp
+  echo "Finished file compression" | tee -a ${LOG}
+  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo | tee -a ${LOG}
+
+  echo 'Done.' | tee -a ${LOG}
+  echo | tee -a ${LOG}
+}
+
+
 

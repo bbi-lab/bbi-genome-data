@@ -24,7 +24,7 @@
       *  set the variable BOWTIE2_BUILD to the path for the *bowtie2-build* program
       *  set the variables R_GENERATE_TSS_FILE and R_GENERATE_GENE_BODY_FILE to the paths for the *generate_tss_file.R* and *generate_gene_body_file.R* scripts
       *  set the variable BEDTOOLS to the path for the *bedtools* program
-  *  edit the script *all.02.definitions.sh* to set the variable STAGE_DIR, where the scripts will make their output directories
+  *  edit the script *all.02.definitions.sh* to set the variable STAGE_DIR, where the scripts will make their output directories.
 
 
 ## Make genome-specific definition files.
@@ -54,6 +54,7 @@
           *  *02*  scripts have variable and function definitions for either all pipelines or a specific pipeline
           *  *03*+ scripts have functions used in a pipeline. The numbers give the order in which the functions are used in the *01* scripts
           *  *10*  scripts have functions for cleaning up by deleting unnecessary files
+  *  consider setting STAGE_DIR to a temporary staging directory where the genome directories and their files are made and checked. Then move them to the directory where they will be used.
   *  the scripts make a directory in which they write their output files
       *  the scripts make their directory in the parent directory specified in the variable STAGE_DIR, which is defined in the script *all.02.definitions.sh*
       *  the script *genome.01.run.sh* makes the directory *&lt;organism&gt;_gsrc*

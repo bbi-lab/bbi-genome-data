@@ -42,6 +42,7 @@ mkdir -p $GENOME_DIR
 pushd $GENOME_DIR
 
 barnyard_setup_source_files
+barnyard_compress_finish_fasta_file
 
 popd
 

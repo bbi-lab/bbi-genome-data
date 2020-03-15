@@ -136,3 +136,19 @@ function barnyard_setup_source_files()
 }
 
 
+#
+# Compress finished fasta file (keep original).
+#
+function barnyard_compress_finish_fasta_file()
+{
+  echo "Compress a copy of $BARNYARD_FASTA_FINISHED to make ${BARNYARD_FASTA_FINISHED}.bz2..." | tee -a ${LOG}
+  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  bzip2 -k $BARNYARD_FASTA_FINISHED
+  echo "Finished file compression" | tee -a ${LOG}
+  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo | tee -a ${LOG}
+
+  echo 'Done.' | tee -a ${LOG}
+  echo | tee -a ${LOG}
+}
+
