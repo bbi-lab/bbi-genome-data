@@ -7,38 +7,41 @@ function get_fasta_file
   rm -f ${CHECKSUMS}.dna
   rm -f ${README}.dna
 
-  echo "Download and uncompress fasta file" | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
-  echo "URL is ${ENSEMBL_DNA_URL}" | tee -a ${LOG}
-  echo "Fasta filename is $FASTA_GZ" | tee -a ${LOG}
-  echo "Download fasta file..." | tee -a ${LOG}
-  echo "${TAG} Genome fasta file URL: ${ENSEMBL_DNA_URL}/$FASTA_GZ" | tee -a ${LOG}
-  wget --no-verbose ${ENSEMBL_DNA_URL}/$FASTA_GZ 2>&1 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Download and uncompress fasta file" | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
-  echo "Download ${CHECKSUMS}..." | tee -a ${LOG}
-  wget --no-verbose ${ENSEMBL_DNA_URL}/${CHECKSUMS} 2>&1 | tee -a ${LOG}
-  mv ${CHECKSUMS} ${CHECKSUMS}.dna 2>&1 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "URL is ${ENSEMBL_DNA_URL}" | proc_stdout
+  echo "Fasta filename is $FASTA_GZ" | proc_stdout
 
-  echo "Download ${README}..." | tee -a ${LOG}
-  wget --no-verbose ${ENSEMBL_DNA_URL}/${README} 2>&1 | tee -a ${LOG}
-  mv ${README} ${README}.dna 2>&1 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Download fasta file..." | proc_stdout
+  echo "Genome fasta file URL: ${ENSEMBL_DNA_URL}/$FASTA_GZ" | proc_stdout ${RECORD}
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo -n "Calculated $FASTA_GZ checksum is " | tee -a ${LOG}
-  sum $FASTA_GZ | tee ${FASTA_GZ}.checksum | tee -a ${LOG}
-  echo -n "Expected $FASTA_GZ checksum is " | tee -a ${LOG}
-  grep $FASTA_GZ ${CHECKSUMS}.dna | awk '{print$1,$2}' 2>&1 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  wget --no-verbose ${ENSEMBL_DNA_URL}/$FASTA_GZ 2>&1 | proc_stdout
+  echo | proc_stdout
 
-  echo "Uncompress $FASTA file..." | tee -a ${LOG}
+  echo "Download ${CHECKSUMS}..." | proc_stdout
+  wget --no-verbose ${ENSEMBL_DNA_URL}/${CHECKSUMS} 2>&1 | proc_stdout
+  mv ${CHECKSUMS} ${CHECKSUMS}.dna 2>&1 | proc_stdout
+  echo | proc_stdout
+
+  echo "Download ${README}..." | proc_stdout
+  wget --no-verbose ${ENSEMBL_DNA_URL}/${README} 2>&1 | proc_stdout
+  mv ${README} ${README}.dna 2>&1 | proc_stdout
+  echo | proc_stdout
+
+  echo "CHECKPOINT" | proc_stdout
+  echo "Calculated $FASTA_GZ checksum is " | proc_stdout ${RECORD}
+  sum $FASTA_GZ | tee ${FASTA_GZ}.checksum | proc_stdout ${RECORD}
+  echo "Expected $FASTA_GZ checksum is " | proc_stdout ${RECORD}
+  grep $FASTA_GZ ${CHECKSUMS}.dna | awk '{print$1,$2}' 2>&1 | proc_stdout ${RECORD}
+  echo | proc_stdout
+
+  echo "Uncompress $FASTA file..." | proc_stdout
   zcat $FASTA_GZ > $FASTA
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 
 
@@ -47,28 +50,33 @@ function get_fasta_file
 #
 function get_fasta_info()
 {
-  echo "Calculate $FASTA file sequence md5 checksums..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Calculate $FASTA file sequence md5 checksums..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   $MD5_SEQ $FASTA > $FASTA.md5_seq
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "Get fasta sequence headers in $FASTA file..." | tee -a ${LOG}
+  echo "md5 checksums of sequences in $FASTA (reporting only names that match '([0-9]+|[XY]|MT)' )..." | proc_stdout ${RECORD}
+  echo "(The ATAC-seq pipeline requires that these have the order 1 ... <n> X Y MT)" | proc_stdout ${RECORD}
+  cat $FASTA.md5_seq | awk '$1~/^([0-9]+|[XY]|MT)/' | proc_stdout ${RECORD}
+  echo | proc_stdout
+
+  echo "Get fasta sequence headers in $FASTA file..." | proc_stdout
   grep '^>' $FASTA > $FASTA.headers
-  echo | tee -a ${LOG}
+  echo | proc_stdout
  
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Fasta sequence header in $FASTA file..." | tee -a ${LOG}
-  cat $FASTA.headers | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Fasta sequence header in $FASTA file..." | proc_stdout
+  cat $FASTA.headers | proc_stdout
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Fasta sequence type counts in $FASTA file..." | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Fasta sequence type counts in $FASTA file..." | proc_stdout
   awk '{print$4}' $FASTA.headers  \
     | sort \
-    | uniq -c | tee -a ${LOG}
-  echo | tee -a ${LOG}
+    | uniq -c | proc_stdout
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 

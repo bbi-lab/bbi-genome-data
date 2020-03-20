@@ -43,7 +43,7 @@ SEQUENCES_TO_KEEP_ANALYSIS="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 2
 
 #
 # The transcript gene_biotypes to select from the GTF file. The
-# string is a regular expression so the string must consist of
+# string is a regular expression so the string consists of
 # names, or partial names, separated by vertical bars without
 # spaces.
 #

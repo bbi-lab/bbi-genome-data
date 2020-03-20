@@ -4,6 +4,11 @@
 # Build source genome files (except for barnyard).
 #
 
+set -o pipefail  # trace ERR through pipes
+set -o errtrace  # trace ERR through 'time command' and other functions
+set -o nounset   # set -u : exit the script if you try to use an uninitialised variable
+set -o errexit   # set -e : exit the script if any statement returns a non-true return value
+
 ORGANISM="$1"
 
 if [ "$ORGANISM" == "" ]
@@ -30,7 +35,7 @@ source ${SCRIPT_DIR}/genome.02.definitions.sh
 source ${SCRIPT_DIR}/genome.03.get_fasta_file.sh
 source ${SCRIPT_DIR}/genome.04.make_genome_files.sh
 source ${SCRIPT_DIR}/genome.05.get_gtf_file.sh
-source ${SCRIPT_DIR}/genome.10.remove_unnecessary_files.sh
+source ${SCRIPT_DIR}/genome.10.make_clean_directory.sh
 
 mkdir -p $GENOME_DIR
 
@@ -45,7 +50,7 @@ compress_finish_fasta_file
 make_chromosome_sizes_file
 get_gtf_file
 get_gtf_info
-remove_unnecessary_files
+make_clean_directory
 
 popd
 

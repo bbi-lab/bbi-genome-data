@@ -3,9 +3,9 @@
  
 function barnyard_setup_source_files()
 {
-  echo "Make copies of and soft links to required files from ${GENOME_DIR}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Make copies of and soft links to required files from ${GENOME_DIR}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  echo | proc_stdout
 
   HUMAN_FASTA_FINISHED="human.fa.finished"
   HUMAN_GTF="human.gtf"
@@ -21,22 +21,22 @@ function barnyard_setup_source_files()
   source ${SCRIPT_DIR}/all.02.definitions.sh
   SRC_HUMAN_FASTA_FINISHED="${GENOME_DIR}/${FASTA_FINISHED}"
 
-  echo "Edit human ${FASTA_FINISHED} into ${HUMAN_FASTA_FINISHED} by adding 'HUMAN_' to chr names..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Edit human ${FASTA_FINISHED} into ${HUMAN_FASTA_FINISHED} by adding 'HUMAN_' to chr names..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   sed 's/^>/>HUMAN_/' ${SRC_HUMAN_FASTA_FINISHED} > ${HUMAN_FASTA_FINISHED}
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "Edit human ${GTF_GZ} into ${HUMAN_GTF} by adding 'HUMAN_' to chr names..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Edit human ${GTF_GZ} into ${HUMAN_GTF} by adding 'HUMAN_' to chr names..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_GTF_GZ=${GENOME_DIR}/${GTF_GZ}
   zcat $SRC_GTF_GZ | grep -v '^#' | sed 's/^/HUMAN_/' > $HUMAN_GTF
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "Edit human ${CHROMOSOME_SIZES_FILE} into ${HUMAN_CHROMOSOME_SIZES_FILE} by adding 'HUMAN_' to chr names..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Edit human ${CHROMOSOME_SIZES_FILE} into ${HUMAN_CHROMOSOME_SIZES_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_SIZES_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_FILE}
   sed 's/^/HUMAN_/' $SRC_CHROMOSOME_SIZES_FILE > $HUMAN_CHROMOSOME_SIZES_FILE
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
  
   #
@@ -47,22 +47,22 @@ function barnyard_setup_source_files()
   SRC_MOUSE_FASTA_FINISHED="${GENOME_DIR}/${FASTA_FINISHED}"
 
 
-  echo "Edit mouse ${FASTA_FINISHED} into ${MOUSE_FASTA_FINISHED} by adding 'MOUSE_' to chr names..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Edit mouse ${FASTA_FINISHED} into ${MOUSE_FASTA_FINISHED} by adding 'MOUSE_' to chr names..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   sed 's/^>/>MOUSE_/' ${SRC_MOUSE_FASTA_FINISHED} > ${MOUSE_FASTA_FINISHED}
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "Edit mouse ${GTF_GZ} into ${MOUSE_GTF} by adding 'MOUSE_' to chr names..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Edit mouse ${GTF_GZ} into ${MOUSE_GTF} by adding 'MOUSE_' to chr names..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_GTF_GZ=${GENOME_DIR}/${GTF_GZ}
   zcat $SRC_GTF_GZ | grep -v '^#' | sed 's/^/MOUSE_/' > $MOUSE_GTF
-  echo | tee -a ${LOG}
+  echo | proc_stdout
  
-  echo "Edit mouse ${CHROMOSOME_SIZES_FILE} into ${MOUSE_CHROMOSOME_SIZES_FILE} by adding 'MOUSE_' to chr names..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Edit mouse ${CHROMOSOME_SIZES_FILE} into ${MOUSE_CHROMOSOME_SIZES_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_SIZES_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_FILE}
   sed 's/^/MOUSE_/' $SRC_CHROMOSOME_SIZES_FILE > $MOUSE_CHROMOSOME_SIZES_FILE
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
   #
   # Concatenate fasta, gtf, and chromosome_sizes files.
@@ -70,68 +70,68 @@ function barnyard_setup_source_files()
   source ${SCRIPT_DIR}/genome.barnyard.sh
   source ${SCRIPT_DIR}/all.02.definitions.sh
 
-  echo "Concatenate ${HUMAN_FASTA_FINISHED} ${MOUSE_FASTA_FINISHED} into ${BARNYARD_FASTA_FINISHED}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Concatenate ${HUMAN_FASTA_FINISHED} ${MOUSE_FASTA_FINISHED} into ${BARNYARD_FASTA_FINISHED}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   cat ${HUMAN_FASTA_FINISHED} ${MOUSE_FASTA_FINISHED} > ${BARNYARD_FASTA_FINISHED}
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "Concatenate ${HUMAN_GTF} ${MOUSE_GTF} into ${BARNYARD_GTF_GZ}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Concatenate ${HUMAN_GTF} ${MOUSE_GTF} into ${BARNYARD_GTF_GZ}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   cat ${HUMAN_GTF} ${MOUSE_GTF} | gzip > ${BARNYARD_GTF_GZ}
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "Concatenate ${HUMAN_CHROMOSOME_SIZES_FILE} ${MOUSE_CHROMOSOME_SIZES_FILE} into ${CHROMOSOME_SIZES_FILE}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Concatenate ${HUMAN_CHROMOSOME_SIZES_FILE} ${MOUSE_CHROMOSOME_SIZES_FILE} into ${CHROMOSOME_SIZES_FILE}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   cat ${HUMAN_CHROMOSOME_SIZES_FILE} ${MOUSE_CHROMOSOME_SIZES_FILE} > ${CHROMOSOME_SIZES_FILE}
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
   #
   # Checks.
   #
-  echo "Calculate ${BARNYARD_FASTA_FINISHED} file sequence md5 checksums..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Calculate ${BARNYARD_FASTA_FINISHED} file sequence md5 checksums..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   $MD5_SEQ ${BARNYARD_FASTA_FINISHED} > ${BARNYARD_FASTA_FINISHED}.md5_seq
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Check for inconsistent md5 checksums for ${SRC_HUMAN_FASTA_FINISHED} and human chromosomes in ${BARNYARD_FASTA_FINISHED} the ERRORs..." | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Check for inconsistent md5 checksums for human sequences in ${SRC_HUMAN_FASTA_FINISHED} and ${BARNYARD_FASTA_FINISHED}..." | proc_stdout ${RECORD}
   grep '^HUMAN_' ${BARNYARD_FASTA_FINISHED}.md5_seq | sed 's/^HUMAN_//' | sort -k 1,1 > tmp.out
   join -1 1 -2 1 ${SRC_HUMAN_FASTA_FINISHED}.md5_seq.sort tmp.out \
     | sort -k1,1V \
-    | awk '{printf( "%s\t%s\t%s\n", $1, $3, $5);}' \
-    | awk '{if($2!=$3){printf("ERROR: inconsistent md5sum values for chromosome %s\n",$1);}}' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+    | awk '{printf( "%s\t%s\t%s\t%s\t%s\n", $1, $3, $5, $2, $4);}' \
+    | awk 'BEGIN{eflag=0;}{if($2!=$3){printf("  ** chromosome %s differs (lengths %s %s)\n",$1,$4,$5);eflag=1;}}END{if(eflag==0){printf("No differences.\n");}}' | proc_stdout ${RECORD}
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Check for inconsistent md5 checksums for ${SRC_MOUSE_FASTA_FINISHED} and mouse chromosomes in ${BARNYARD_FASTA_FINISHED} the ERRORs..." | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Check for inconsistent md5 checksums for mouse sequences in ${SRC_MOUSE_FASTA_FINISHED} and ${BARNYARD_FASTA_FINISHED}..." | proc_stdout ${RECORD}
   grep '^MOUSE_' ${BARNYARD_FASTA_FINISHED}.md5_seq | sed 's/^MOUSE_//' | sort -k 1,1 > tmp.out
   join -1 1 -2 1 ${SRC_MOUSE_FASTA_FINISHED}.md5_seq.sort tmp.out \
     | sort -k1,1V \
-    | awk '{printf( "%s\t%s\t%s\n", $1, $3, $5);}' \
-    | awk '{if($2!=$3){printf("ERROR: inconsistent md5sum values for chromosome %s\n",$1);}}' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+    | awk '{printf( "%s\t%s\t%s\t%s\t%s\n", $1, $3, $5, $2, $4);}' \
+    | awk 'BEGIN{eflag=0;}{if($2!=$3){printf("  ** chromosome %s differs (lengths %s %s)\n",$1,$4,$5);eflag=1;}}END{if(eflag==0){printf("No differences.\n");}}' | proc_stdout ${RECORD}
+  echo | proc_stdout
 
   rm -f tmp.out
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Count total number of annotations per sequence in ${BARNYARD_GTF_GZ}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count total number of annotations per sequence in ${BARNYARD_GTF_GZ}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   zcat $BARNYARD_GTF_GZ \
     | grep -v '^#' \
     | awk '{print$1}' \
     | sort \
     | uniq -c \
     | sort -k2,2V \
-    | awk '{printf( "%s\t%s\n", $1, $2 );}' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+    | awk '{printf( "%s\t%s\n", $1, $2 );}' | proc_stdout
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  cat $CHROMOSOME_SIZES_FILE | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  cat $CHROMOSOME_SIZES_FILE | proc_stdout
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 
 }
 
@@ -141,14 +141,14 @@ function barnyard_setup_source_files()
 #
 function barnyard_compress_finish_fasta_file()
 {
-  echo "Compress a copy of $BARNYARD_FASTA_FINISHED to make ${BARNYARD_FASTA_FINISHED}.bz2..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Compress a copy of $BARNYARD_FASTA_FINISHED to make ${BARNYARD_FASTA_FINISHED}.bz2..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   bzip2 -k $BARNYARD_FASTA_FINISHED
-  echo "Finished file compression" | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Finished file compression" | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 

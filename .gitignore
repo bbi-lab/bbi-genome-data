@@ -94,3 +94,9 @@ ls-sequtil.dist.out
 ls-squid.built.out
 ls-squid.dist.out
 ls-squid.out
+fasta_getseqs
+fasta_getseqs.o
+util.o
+save_org
+.gitignore.swp
+archive

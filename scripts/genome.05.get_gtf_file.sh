@@ -7,76 +7,88 @@ function get_gtf_file()
   rm -f ${CHECKSUMS}.gtf
   rm -f ${README}.gtf
 
-  echo "Download and uncompress GTF file ${GTF_GZ}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
-  echo "URL is ${ENSEMBL_GTF_URL}" | tee -a ${LOG}
-  echo "GTF filename is $GTF_GZ" | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
-  echo "Download GTF file..." | tee -a ${LOG}
-  echo "${TAG} genome GTF file URL: ${ENSEMBL_GTF_URL}/$GTF_GZ" | tee -a ${LOG}
-  wget --no-verbose ${ENSEMBL_GTF_URL}/$GTF_GZ 2>&1 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Download and uncompress GTF file ${GTF_GZ}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  echo "URL is ${ENSEMBL_GTF_URL}" | proc_stdout
+  echo "GTF filename is $GTF_GZ" | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  echo "Genome GTF file URL: ${ENSEMBL_GTF_URL}/$GTF_GZ" | proc_stdout ${RECORD}
+  wget --no-verbose ${ENSEMBL_GTF_URL}/$GTF_GZ 2>&1 | proc_stdout
+  echo | proc_stdout
 
-  echo "Download ${CHECKSUMS}..." | tee -a ${LOG}
-  wget --no-verbose ${ENSEMBL_GTF_URL}/${CHECKSUMS} 2>&1 | tee -a ${LOG}
-  mv ${CHECKSUMS} ${CHECKSUMS}.gtf 2>&1 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Download ${CHECKSUMS}..." | proc_stdout
+  wget --no-verbose ${ENSEMBL_GTF_URL}/${CHECKSUMS} 2>&1 | proc_stdout
+  mv ${CHECKSUMS} ${CHECKSUMS}.gtf 2>&1 | proc_stdout
+  echo | proc_stdout
 
-  echo "Download ${README}..." | tee -a ${LOG}
-  wget --no-verbose ${ENSEMBL_GTF_URL}/${README} 2>&1 | tee -a ${LOG}
-  mv ${README} ${README}.gtf 2>&1 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Download ${README}..." | proc_stdout
+  wget --no-verbose ${ENSEMBL_GTF_URL}/${README} 2>&1 | proc_stdout
+  mv ${README} ${README}.gtf 2>&1 | proc_stdout
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo -n "Calculated ${GTF_GZ} checksum is " | tee -a ${LOG}
-  sum $GTF_GZ | tee ${GTF_GZ}.checksum | tee -a ${LOG}
-  echo -n "Expected $GTF_GZ checksum is " | tee -a ${LOG}
-  grep $GTF_GZ CHECKSUMS.gtf | awk '{print$1,$2}' 2>&1 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Calculated ${GTF_GZ} checksum is " | proc_stdout ${RECORD}
+  sum $GTF_GZ | tee ${GTF_GZ}.checksum | proc_stdout ${RECORD}
+  echo "Expected $GTF_GZ checksum is " | proc_stdout ${RECORD}
+  grep $GTF_GZ CHECKSUMS.gtf | awk '{print$1,$2}' 2>&1 | proc_stdout ${RECORD}
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 
 
 function get_gtf_info()
 {
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Count total number of annotations per sequence in ${GTF_GZ}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count total number of annotations per sequence in ${GTF_GZ}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   zcat $GTF_GZ \
     | grep -v '^#' \
     | awk '{print$1}' \
     | sort \
     | uniq -c \
     | sort -k2,2V \
-    | awk '{printf( "%s\t%s\n", $1, $2 );}' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+    | awk '{printf( "%s\t%s\n", $1, $2 );}' | proc_stdout
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Count number of 'transcripts' per sequence in ${GTF_GZ}..." | tee -a ${LOG}
-  zcat $GTF_GZ \
-    | grep -v '^#' \
-    | awk 'BEGIN{FS="\t"}{if($3=="transcript"){print$1}}' \
-    | sort \
-    | uniq -c \
-    | sort -k2,2V  \
-    | awk '{printf( "%s\t%s\n", $1, $2 );}' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count number of selected feature types and gene biotypes in ${GTF_GZ}..." | proc_stdout ${RECORD}
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Count gene_biotypes in ${GTF_GZ}..." | tee -a ${LOG}
-  zcat $GTF_GZ \
-    | grep -v '^#' \
-    | awk 'BEGIN{FS="\t"}{if($3=="transcript"){printf( "%s; %s\n",$1,$9);}}' \
-    | awk 'BEGIN{FS=";"}{print$1,$8}' \
-    | awk '{print$1,$3}' \
-    | sed 's/"//g' \
-    | awk '{dict[$2]+=1;}END{for( key in dict ){ printf( "%d\t%s\n", dict[key], key ); }}' \
-    | sort -k 2,2 | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  zcat ${GTF_GZ} \
+  | grep -v '^#' \
+  | awk 'BEGIN{ FS="\t"; }
+      {
+        if( $3 ~ /^(gene|transcript|exon|three_prime_utr)$/ ) {
+            count_type[$3] += 1
+            n = split( $9, arr1, ";" );
+            for( i = 1; i <= n; ++i ) {
+              split( arr1[i], arr2, " " );
+              if( arr2[1] == "gene_biotype" ) {
+                count_biotype[arr2[2]] += 1;
+                break;
+              }
+            }
+         }
+      }
+      END {
+        printf( "Number of entry feature types\n" );
+        n = asorti( count_type, sid );
+        for( i = 1; i <= n; ++i ) {
+          printf( "%d\t%s\n", count_type[sid[i]], sid[i] );
+        }
+        printf( "\n" );
+        printf( "Number of entry biotypes\n" );
+        n = asorti( count_biotype, sid );
+        for( i = 1; i <= n; ++i ) {
+           biotype_out = sid[i];
+           gsub( /"/, "", biotype_out );
+           printf( "%d\t%s\n", count_biotype[sid[i]], biotype_out );
+        }
+     }' | proc_stdout ${RECORD}
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 

@@ -13,19 +13,19 @@
 #
 function sequences_to_keep_ref()
 {
-  echo "Keep the REF sequences for read alignments in ${FASTA}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Keep the REF sequences for read alignments in ${FASTA}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   cat ${FASTA}.headers \
     | awk '{if($4=="REF"){print$1}}' \
     | sed 's/^>//' > $FINAL_IDS_FILE
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  cat $FINAL_IDS_FILE | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  cat $FINAL_IDS_FILE | proc_stdout
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 
 
@@ -39,18 +39,18 @@ function sequences_to_keep_ref()
 #
 function sequences_to_keep_named()
 {
-  echo "Keep the named sequences for read alignments in ${FASTA}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Keep the named sequences for read alignments in ${FASTA}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  echo | proc_stdout
   echo "$SEQUENCES_TO_KEEP_ALIGNER" | sed 's/[ ][ ]*/\n/g' > $FINAL_IDS_FILE
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  cat $FINAL_IDS_FILE | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  cat $FINAL_IDS_FILE | proc_stdout
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 
 
@@ -59,39 +59,39 @@ function sequences_to_keep_named()
 #
 function filter_fasta_file()
 { 
-  echo "Extract selected sequences from the fasta file ${FASTA}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Extract selected sequences from the fasta file ${FASTA}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   $FASTA_GETSEQS $FINAL_IDS_FILE $FASTA > $FASTA_FILTERED
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Count the sequences in the filtered fasta file ${FASTA_FILTERED}..." | tee -a ${LOG}
-  grep '^>' $FASTA_FILTERED | wc -l | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count the sequences in the filtered fasta file ${FASTA_FILTERED}..." | proc_stdout ${RECORD}
+  grep '^>' $FASTA_FILTERED | wc -l | proc_stdout ${RECORD}
+  echo | proc_stdout
   
-  echo "Calculate filtered fasta file sequence md5 checksums for ${FASTA}..." | tee -a ${LOG}
+  echo "Calculate filtered fasta file sequence md5 checksums for ${FASTA}..." | proc_stdout
   $MD5_SEQ $FASTA_FILTERED > $FASTA_FILTERED.md5_seq
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "Compare the md5 checksums for the downloaded and filtered fasta files..." | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Compare the md5 checksums for the downloaded and filtered fasta files..." | proc_stdout
+  echo | proc_stdout
   sort -k1,1 $FASTA.md5_seq > $FASTA.md5_seq.sort
   sort -k1,1 $FASTA_FILTERED.md5_seq > $FASTA_FILTERED.md5_seq.sort
+  join -1 1 -2 1 ${FASTA}.md5_seq.sort ${FASTA_FILTERED}.md5_seq.sort \
+    | sort -k1,1V \
+    | awk '{printf( "%s\t%s\t%s\t%s\t%s\n", $1, $3, $5, $2, $4);}' | proc_stdout
+  echo | proc_stdout
+
+  echo "CHECKPOINT" | proc_stdout
+  echo "Check for inconsistent md5 checksums for the downloaded and filtered fasta files and report differences as ERRORs..." | proc_stdout ${RECORD}
   join -1 1 -2 1 $FASTA.md5_seq.sort $FASTA_FILTERED.md5_seq.sort \
     | sort -k1,1V \
-    | awk '{printf( "%s\t%s\t%s\n", $1, $3, $5);}' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+    | awk '{printf( "%s\t%s\t%s\n", $1, $3, $5, $2, $4);}' \
+    | awk 'BEGIN{eflag=0;}{if($2!=$3){printf("ERROR: inconsistent md5sum values for chromosome %s ((lengths %s %s)\n",$1,$4,$5);eflag=1;}}END{if(eflag==0){printf("No differences.\n");}}' | proc_stdout ${RECORD}
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Check for inconsistent md5 checksums for the downloaded and filtered fasta files and report differences as ERRORs..." | tee -a ${LOG}
-  join -1 1 -2 1 $FASTA.md5_seq.sort $FASTA_FILTERED.md5_seq.sort \
-    | sort -k1,1V \
-    | awk '{printf( "%s\t%s\t%s\n", $1, $3, $5);}' \
-    | awk '{if($2!=$3){printf("ERROR: inconsistent md5sum values for chromosome %s\n",$1);}}' | tee -a ${LOG}
-  echo | tee -a ${LOG}
-
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 
 
@@ -104,41 +104,41 @@ function finish_fasta_file()
 {
   if [[ "$PAR_DEFINED" -eq 1 ]]
   then
-    echo -n "$TAG bedtools version: " | tee -a ${LOG}
-    ${BEDTOOLS} --version | tee -a ${LOG}
-    echo | tee -a ${LOG}
+    echo "bedtools version: " | proc_stdout ${RECORD}
+    ${BEDTOOLS} --version | proc_stdout ${RECORD}
+    echo | proc_stdout
 
-    echo "Mask pseudo-autosomal regions in $FASTA_FILTERED to make ${FASTA_FINISHED}..." | tee -a ${LOG}
-    echo "$TAG Mask pseudo-autosomal regions in $FASTA_FILTERED to make ${FASTA_FINISHED}..." | tee -a ${LOG}
-    date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+    echo "Mask pseudo-autosomal regions in $FASTA_FILTERED to make ${FASTA_FINISHED}..." | proc_stdout ${RECORD}
+    date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
     make_par_bed
+    echo "PAR bed file" | proc_stdout ${RECORD}
+    cat $PAR_BED | proc_stdout ${RECORD}
     ${BEDTOOLS} maskfasta -fi $FASTA_FILTERED -bed $PAR_BED -fo $FASTA_FINISHED
-    echo | tee -a ${LOG}
+    echo | proc_stdout
   else
-    echo "Copy $FASTA_FILTERED to ${FASTA_FINISHED}..." | tee -a ${LOG}
-    echo "$TAG Copy $FASTA_FILTERED to ${FASTA_FINISHED}..." | tee -a ${LOG}
-    date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+    echo "Copy $FASTA_FILTERED to ${FASTA_FINISHED}..." | proc_stdout ${RECORD}
+    date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
     cp $FASTA_FILTERED $FASTA_FINISHED
-    echo | tee -a ${LOG}
+    echo | proc_stdout
   fi
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "Calculate $FASTA_FINISHED file sequence md5 checksums..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Calculate $FASTA_FINISHED file sequence md5 checksums..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   $MD5_SEQ $FASTA_FINISHED > $FASTA_FINISHED.md5_seq
   sort -k1,1 $FASTA_FINISHED.md5_seq > $FASTA_FINISHED.md5_seq.sort
-  echo | tee -a ${LOG}
+  echo | proc_stdout
 
-  echo "CHECKPOINT" | tee -a ${LOG}
-  echo "Report different md5 checksums from the filtered and finished fasta files (there may be none)..." | tee -a ${LOG}
-  join -1 1 -2 1 $FASTA_FILTERED.md5_seq.sort $FASTA_FINISHED.md5_seq.sort \
+  echo "CHECKPOINT" | proc_stdout
+  echo "Report different md5 checksums from the filtered and finished fasta files (there may be none)..." | proc_stdout ${RECORD}
+  join -1 1 -2 1 ${FASTA_FILTERED}.md5_seq.sort ${FASTA_FINISHED}.md5_seq.sort \
     | sort -k1,1V \
-    | awk '{printf( "%s\t%s\t%s\n", $1, $3, $5);}' \
-    | awk '{if($2!=$3){printf("  ** chromosome %s differs\n",$1);}}' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+    | awk '{printf( "%s\t%s\t%s\t%s\t%s\n", $1, $3, $5, $2, $4);}' \
+    | awk 'BEGIN{eflag=0;}{if($2!=$3){printf("  ** chromosome %s differs (lengths %s %s)\n",$1,$4,$5);eflag=1;}}END{if(eflag==0){printf("No differences.\n");}}' | proc_stdout ${RECORD}
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 
 
@@ -147,15 +147,15 @@ function finish_fasta_file()
 #
 function compress_finish_fasta_file()
 {
-  echo "Compress a copy of $FASTA_FINISHED to make ${FASTA_FINISHED}.bz2..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Compress a copy of $FASTA_FINISHED to make ${FASTA_FINISHED}.bz2..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   bzip2 -k $FASTA_FINISHED
-  echo "Finished file compression" | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "Finished file compression" | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 
 
@@ -164,26 +164,26 @@ function compress_finish_fasta_file()
 #
 function make_chromosome_sizes_file()
 {
-  echo -n "$TAG samtools version: " | tee -a ${LOG}
-  ${SAMTOOLS} --version | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "samtools version: " | proc_stdout
+  ${SAMTOOLS} --version | proc_stdout
+  echo | proc_stdout
  
  
-  echo "Make chromosome sizes file ${CHROMOSOME_SIZES_FILE}..." | tee -a ${LOG}
-  date '+%Y.%m.%d:%H.%M.%S' | tee -a ${LOG}
+  echo "Make chromosome sizes file ${CHROMOSOME_SIZES_FILE}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   ${SAMTOOLS} faidx $FASTA_FILTERED
   REXP=`echo "$SEQUENCES_TO_KEEP_ANALYSIS" \
     | sed 's/[ ][ ]*/|/g' \
     | sed 's/^/(/' \
     | sed 's/$/)/'`
   cat $FASTA_FILTERED.fai | awk '{if($1~/^'$REXP'$/) { printf( "%s\t%s\n",$1,$2); } }' > $CHROMOSOME_SIZES_FILE
-  echo | tee -a ${LOG}
+  echo | proc_stdout
  
-  echo "CHECKPOINT" | tee -a ${LOG}
-  cat $CHROMOSOME_SIZES_FILE | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo "CHECKPOINT" | proc_stdout
+  cat $CHROMOSOME_SIZES_FILE | proc_stdout
+  echo | proc_stdout
 
-  echo 'Done.' | tee -a ${LOG}
-  echo | tee -a ${LOG}
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
 }
 

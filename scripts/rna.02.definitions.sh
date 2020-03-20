@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #
-# Variable definitions used for source genome data files.
+# Variable definitions used for atac data files.
 #
 
-##
 ## in all.02.definitions.sh
+## 
 ## #
 ## # Staging directory.
 ## #
@@ -50,21 +50,27 @@
 module purge
 source /etc/profile.d/modules.sh
 module load modules modules-init modules-gs
-module load samtools/1.9
 module load bedtools/2.28.0
+module load mpfr/2.4.1
+module load gmp/6.1.2
+module load gcc/4.7.0
+module load STAR/2.5.2b
 
 
 #
 # Executable paths.
 #
-MD5_SEQ="/net/bbi/vol1/data/sw_install/sequtils/bin/md5_seq"
-FASTA_GETSEQS="/net/bbi/vol1/data/sw_install/sequtils/bin/fasta_getseqs"
-SAMTOOLS="samtools"
+STAR_ALIGNER="STAR"
 BEDTOOLS="bedtools"
+DATAMASH_PATH="/net/bbi/vol1/data/sw_install/datamash-1.0.6/bin/datamash"
 
+
+#
+# star aligner index name.
+#
+INDEX_PREFIX="$ORGANISM"
+ 
 #
 # Files.
 #
-CHECKSUMS="CHECKSUMS"
-README="README"
-FINAL_IDS_FILE="sequences_to_keep.txt"
+

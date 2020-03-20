@@ -8,13 +8,12 @@
 # or make the 'finished' fasta files, etc.
 #
 
-ORGANISM="barnyard"
+set -o pipefail  # trace ERR through pipes
+set -o errtrace  # trace ERR through 'time command' and other functions
+set -o nounset   # set -u : exit the script if you try to use an uninitialised variable
+set -o errexit   # set -e : exit the script if any statement returns a non-true return value
 
-if [ "$ORGANISM" == "" ]
-then
-  echo "Usage: genome.01.run_barnyard.sh <organism>"
-  exit -1
-fi
+ORGANISM="barnyard"
 
 
 ORGANISM_FILE="genome.${ORGANISM}.sh"

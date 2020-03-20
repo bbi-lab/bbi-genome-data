@@ -33,21 +33,24 @@
 
 ## Run the scripts
   *  run `genome.01.run.sh <organism>` to download and prepare the genome fasta and gtf files for *&lt;organism&gt;*
-  *  run `atac.01.run.sh <organism>` to prepare files for the sci-ATAC-seq processing pipeline for *&lt;organism&gt;*
   *  run `genome.01.run_barnyard.sh` to prepare files for the human-mouse barnyard processing
+  *  run `rna.01.run.sh <organism>` to prepare files for the sci-RNA-seq processing pipeline.
+  *  run `rna.01.run.sh barnyard` to prepare human-mouse barnyard files for the sci-RNA-seq processing pipeline.
+  *  run `atac.01.run.sh <organism>` to prepare files for the sci-ATAC-seq processing pipeline for *&lt;organism&gt;*
   *  run `atac.01.run.sh barnyard` to prepare human-mouse barnyard files for the sci-ATAC-seq processing pipeline
 
 ## Check log files
 
-  *  review the file *&lt;output_dir&gt;/log.out*. Key information is marked with the string CHECKPOINT.
-  *  critical information is labeled with the prefix *TAG_<date:time>*.
+  *  review the files *&lt;output_dir&gt;/log.out*. Key information is marked with the string CHECKPOINT.
   *  read the script functions to understand the reports in *&lt;output_dir&gt;/log.out*
+  *  the files *&lt;output_dir&gt;/record.out* have particularly important information for record-keeping (which is in log.out too).
 
 ## Notes:
   *  script names have the form &lt;pipeline&gt;.&lt;number&gt;.&lt;description&gt;.sh
       *  scripts &lt;pipeline&gt; values
-          * *all*  scripts are sourced in scripts for both *genome* and *atac*
+          * *all*  scripts are sourced in scripts for *genome*, *rna*, and *atac*
           * *genome* scripts download and process fasta and gtf files used in both the sci-RNA-seq and sci-ATAC-seq processing pipelines
+          * *rna* scripts make files related to the sci-RNA-seq processing pipeline
           * *atac* scripts make files related to the sci-ATAC-seq processing pipeline
       *  script &lt;number&gt; values
           *  *01*  scripts are executable
@@ -59,6 +62,7 @@
       *  the scripts make their directory in the parent directory specified in the variable STAGE_DIR, which is defined in the script *all.02.definitions.sh*
       *  the script *genome.01.run.sh* makes the directory *&lt;organism&gt;_gsrc*
       *  the script *genome.01.run_barnyard.sh* makes the directory *barnyard_gsrc*
+      *  the script *rna.01.run.sh* makes the directories *&lt;organism&gt;* and  *&lt;organism&gt;_star*
       *  the script *atac.01.run.sh* makes the directory *&lt;organism&gt;_atac*
   *  *&lt;output_dir&gt;* refers to *&lt;organism&gt;_gsrc*, *barnyard_gsrc*, and *&lt;organism&gt;_atac*
   *  the scripts write diagnostic information to the terminal and to the file *&lt;output_dir&gt;/log.out*
@@ -84,5 +88,8 @@
   *  the barnyard genome files are built from the human and mouse files in the *human_gsrc* and *mouse_gsrc* directories so run *genome.01.run.sh* for human and mouse (and preserve the fasta files in them) and then run *genome.01.run_barnyard.sh*
   *  there are functions for cleaning unwanted files from the *&lt;output_dir&gt;* directories but they do nothing as distributed. Edit them in order to delete unwanted files
   *  pseudo-autosomal regions: finding PAR coordinates for organisms seems difficult. Perhaps, they are defined for only a few organisms. I found human and mouse PAR coordinates at <https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.39_GRCh38.p13/GCF_000001405.39_GRCh38.p13_assembly_regions.txt> and <https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.26_GRCm38.p6/GCF_000001635.26_GRCm38.p6_assembly_regions.txt>, respectively. The PARs appear to be masked in the Y chromosome
+  *  ATAC-specific issues
+      *  calculate effective genome size: http://koke.asrc.kanazawa-u.ac.jp/HOWTO/kmer-genomesize.html, https://khmer.readthedocs.io/en/v2.1.1/, https://bioinformatics.uconn.edu/genome-size-estimation-tutorial/#, and  https://deeptools.readthedocs.io/en/develop/content/feature/effectiveGenomeSize.html. The effective genome size is used in the ATAC analysis by MACS2.
+      *  the chromosome sequences in the genome fasta file must be in a specific order; that is, numerically, XY, and MT. For example, for human, 1, 2, 3, ..., 22, X, Y, MT, ... The script *scripts/fasta_sort.sh* should make a correctly sorted fasta file.
   *  I feel ambivalent about these scripts. I want to automate downloading, preparing, and checking the files. However, checking the resulting output files requires some care and I am concerned that the automation, coupled with the large amount of diagnostic information in the *log.out* files, may overwhelm the user and result in some complacency. Additionally, I strive to eliminate code duplication in the scripts, which results in unfortunate complexity. I am not confident that I found an effective balance in these scripts.
 

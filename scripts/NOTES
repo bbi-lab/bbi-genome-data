@@ -1,0 +1,4 @@
+possible additions
+  o  check for numbered chromosomes, X, Y, and MT, and warn if any are missing
+  o  think more about what to write to record.out
+  o  check that the sequences in the fasta file are sorted as required for the atac-seq pipeline

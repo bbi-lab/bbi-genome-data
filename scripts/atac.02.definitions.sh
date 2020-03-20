@@ -21,7 +21,7 @@
 ## #   ATAC_DIR       sci-ATAC-seq files
 ## #
 ## GENOME_DIR="${STAGE_DIR}/${ORGANISM}_gsrc"
-## RNA_DIR="${STAGE_DIR}/${ORGANISM}_rna"
+## RNA_DIR="${STAGE_DIR}/${ORGANISM}"
 ## STAR_DIR="${STAGE_DIR}/${ORGANISM}_star"
 ## ATAC_DIR="${STAGE_DIR}/${ORGANISM}_atac"
 ## 
@@ -41,7 +41,7 @@
 ## BARNYARD_GTF_GZ="barnyard.gtf.gz"
 ## 
 ## #
-## # Log file tag from pulling key information from the log files.
+## # Log file tag for pulling key information from the log files.
 ## #
 ## TAG_DATE=`date '+%Y%m%d:%H%M%S'`
 ## TAG="TAG_${TAG_DATE}"
@@ -65,8 +65,8 @@ BOWTIE2_BUILD="/net/bbi/vol1/data/sw_install/bowtie2-2.4.1/bin/bowtie2-build"
 #
 # R scripts.
 #
-R_GENERATE_TSS_FILE="/net/gs/vol1/home/bge/eclipse-workspace/bbi-genome-data/R/generate_tss_file.R"
-R_GENERATE_GENE_BODY_FILE="/net/gs/vol1/home/bge/eclipse-workspace/bbi-genome-data/R/generate_gene_body_file.R"
+R_GENERATE_TSS_FILE="/net/bbi/vol1/data/src/genome_data/sciatac/R/generate_tss_file.R"
+R_GENERATE_GENE_BODY_FILE="/net/bbi/vol1/data/src/genome_data/sciatac/R/generate_gene_body_file.R"
 
 #
 # bowtie2-build index prefix.
@@ -76,7 +76,6 @@ INDEX_PREFIX="$ORGANISM"
 #
 # Files.
 #
-LOG="${ATAC_DIR}/log.out"
 CHROMOSOME_SIZES_FILE="chromosome_sizes.txt"
 WHITELIST_REGIONS_BED="whitelist_regions.bed"
 TSS_BED="tss.bed"
