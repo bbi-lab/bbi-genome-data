@@ -8,8 +8,7 @@
 #
 # Staging directory.
 #
-# STAGE_DIR="/net/bbi/vol1/data/genomes/stage_dir"
-STAGE_DIR="/net/bbi/vol1/data/bge/genomes/nobackup/stage_dir"
+STAGE_DIR="/net/bbi/vol1/data/genomes/stage_dir"
 
 
 #
@@ -51,8 +50,9 @@ TAG="TAG_${TAG_DATE}"
 
 
 #
+# Manipulate stdout.
 # Usage: <command> | proc_stdout
-#           or
+#      or
 #        <command> | proc_stdout <filename>
 #
 # The first example writes to stdout and ${LOG}

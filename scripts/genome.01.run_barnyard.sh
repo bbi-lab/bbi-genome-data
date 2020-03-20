@@ -24,7 +24,6 @@ then
 fi
 
 
-
 SCRIPT_DIR="."
 if [ "$SCRIPT_DIR" == "." ]
 then
@@ -35,6 +34,7 @@ source ${SCRIPT_DIR}/$ORGANISM_FILE
 source ${SCRIPT_DIR}/all.02.definitions.sh
 source ${SCRIPT_DIR}/genome.02.definitions.sh
 source ${SCRIPT_DIR}/genome.06.barnyard.sh
+
 
 mkdir -p $GENOME_DIR
 

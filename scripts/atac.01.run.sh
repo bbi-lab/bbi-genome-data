@@ -13,7 +13,7 @@ ORGANISM="$1"
 
 if [ "$ORGANISM" == "" ]
 then
-  echo "Usage: atac.01.setup_genome_source.sh <organism>"
+  echo "Usage: atac.01.run.sh <organism>"
   exit -1
 fi
 
@@ -48,7 +48,7 @@ make_tss_file
 compress_tss_temp_file
 make_gene_bodies_file
 compress_gene_bodies_temp_file
-#make_aligner_index
+make_aligner_index
 make_clean_directory
 
 popd

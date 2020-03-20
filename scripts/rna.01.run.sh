@@ -13,7 +13,7 @@ ORGANISM="$1"
 
 if [ "$ORGANISM" == "" ]
 then
-  echo "Usage: rna.01.setup_genome_source.sh <organism>"
+  echo "Usage: rna.01.run.sh <organism>"
   exit -1
 fi
 
@@ -53,7 +53,6 @@ get_rrna_gene_annotations
 make_clean_bed_directory
 
 popd
-
 
 
 mkdir -p $STAR_DIR

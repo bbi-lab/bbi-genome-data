@@ -73,4 +73,5 @@ INDEX_PREFIX="$ORGANISM"
 #
 # Files.
 #
-
+# Use Jonathan's file names embedded in the rna.*.sh scripts.
+#
