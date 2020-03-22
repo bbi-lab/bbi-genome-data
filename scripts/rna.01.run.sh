@@ -21,7 +21,7 @@ fi
 ORGANISM_FILE="genome.${ORGANISM}.sh"
 if [ ! -f "$ORGANISM_FILE" ]
 then
-  echo "Unable to file \'$ORGANISM_FILE\' for organism $ORGANISM"
+  echo "Unable to find file \'$ORGANISM_FILE\' for organism $ORGANISM"
   exit -1
 fi
 
@@ -37,6 +37,9 @@ source ${SCRIPT_DIR}/rna.04.make_aligner_index.sh
 source ${SCRIPT_DIR}/rna.10.make_clean_directory.sh
 
 
+#
+# Make bed files in directory <organism>.
+#
 mkdir -p $RNA_DIR
 
 pushd $RNA_DIR
@@ -55,6 +58,9 @@ make_clean_bed_directory
 popd
 
 
+#
+# Make star index files in directory <organism>_star.
+#
 mkdir -p $STAR_DIR
 
 pushd $STAR_DIR

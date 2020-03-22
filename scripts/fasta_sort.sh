@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#
+# Sort fasta file by sequence name 1..<n> X Y MT ...
+#
+# Notes:
+#   o  this script is excruciatingly slow when the fasta file
+#      is large and has many sequences.
+#
 
 FASTA="$1"
 
@@ -61,7 +68,7 @@ cat all.chr.txt \
 # Get MT sequence lines.
 #
 cat all.chr.txt \
-| awk '{if($1~/^M$)/){print$0}}' > mt.chr.txt
+| awk '{if($1~/^MT$/){print$0}}' > mt.chr.txt
 
 #
 # Make a file of numbered, XY, and MT sequence lines.
@@ -92,7 +99,7 @@ cat chromosome_names_sorted.txt \
 # Check sequence md5 checksums.
 #
 $MD5_SEQ ${FASTA}.sorted > ${FASTA}.sorted.md5_seq
-sort -k1,1V ${FASTA}.sorted.md5_seq > ${FASTA}.sorted.md5_seq.sort
+sort -k1,1 ${FASTA}.sorted.md5_seq > ${FASTA}.sorted.md5_seq.sort
 echo "Report different md5 checksums from the finished and sorted finished fasta files (there may be none)..."
 join -1 1 -2 1 ${FASTA}.md5_seq.sort ${FASTA}.sorted.md5_seq.sort \
   | sort -k1,1V \

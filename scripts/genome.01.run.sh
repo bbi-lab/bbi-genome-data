@@ -21,7 +21,7 @@ fi
 ORGANISM_FILE="genome.${ORGANISM}.sh"
 if [ ! -f "$ORGANISM_FILE" ]
 then
-  echo "ERROR: unable to file \'$ORGANISM_FILE\' for organism $ORGANISM. Exiting."
+  echo "ERROR: unable to find file \'$ORGANISM_FILE\' for organism $ORGANISM. Exiting."
   exit -1
 fi
 
@@ -36,6 +36,7 @@ source ${SCRIPT_DIR}/genome.03.get_fasta_file.sh
 source ${SCRIPT_DIR}/genome.04.make_genome_files.sh
 source ${SCRIPT_DIR}/genome.05.get_gtf_file.sh
 source ${SCRIPT_DIR}/genome.10.make_clean_directory.sh
+
 
 mkdir -p $GENOME_DIR
 

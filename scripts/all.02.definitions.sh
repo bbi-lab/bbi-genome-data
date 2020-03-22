@@ -1,14 +1,14 @@
 #!/bin/bash
 
 #
-# Variable definitions used for all data files (genome and atac).
+# Variable definitions used for all data files (genome, rna, and atac).
 #
 
 
 #
 # Staging directory.
 #
-STAGE_DIR="/net/bbi/vol1/data/genomes/stage_dir"
+STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
 
 
 #
@@ -56,7 +56,7 @@ TAG="TAG_${TAG_DATE}"
 #        <command> | proc_stdout <filename>
 #
 # The first example writes to stdout and ${LOG}
-# the second example also writes to file <filename>
+# The second example also writes to file <filename>
 # with a 'tag', given by ${TAG},  prepended to each
 # line.
 #
@@ -85,7 +85,7 @@ function proc_stdout()
 # from URL: https://unix.stackexchange.com/questions/39623/trap-err-and-echoing-the-error-line
 # Notes:
 #   o  requires bash shell.
-#   o  use at script start
+#   o  include at start of main script:
 #       set -o pipefail  # trace ERR through pipes
 #       set -o errtrace  # trace ERR through 'time command' and other functions
 #       set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
@@ -136,5 +136,4 @@ function error_trap()
     printf '%s\n' "${_output_array[@]}" >&2
     exit ${_code}
 }
-
 

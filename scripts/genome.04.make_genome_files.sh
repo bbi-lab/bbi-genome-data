@@ -55,7 +55,7 @@ function sequences_to_keep_named()
 
 
 #
-# Extract the specified sequences into a new fasta file.
+# Extract the specified sequences into a new fasta file called ${FASTA}.filtered.
 #
 function filter_fasta_file()
 { 
