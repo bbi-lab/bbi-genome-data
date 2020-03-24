@@ -17,6 +17,7 @@ module load gcc/8.1.0
 #
 BEDTOOLS="bedtools"
 BOWTIE2_BUILD="/net/bbi/vol1/data/sw_install/bowtie2-2.4.1/bin/bowtie2-build"
+FACOUNT="/net/bbi/vol1/data/sw_install/kent_util/bin/faCount"
 
 
 #
@@ -44,4 +45,5 @@ GENE_BODIES_PLUS_UPSTREAM_BED="gene_bodies.plus_2kb_upstream.bed"
 GENE_BODIES_FOUND_BIOTYPES_FILE="gene_bodies.found_biotypes.lst"
 GENE_BODIES_SELECT_BIOTYPES_FILE="gene_bodies.select_biotypes.lst"
 GENE_BODIES_GENE_MAP="gene_bodies_gene_map.txt"
+EFFECTIVE_GENOME_SIZE="effective_genome_size.txt"
 

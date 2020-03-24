@@ -2,3 +2,43 @@ possible additions
   o  check for numbered chromosomes, X, Y, and MT, and warn if any are missing
   o  think more about what to write to record.out
   o  check that the sequences in the fasta file are sorted as required for the atac-seq pipeline
+  o  I look at effective genomes size
+       o  two recommended procedures appear to be
+            o  count non-N (and perhaps exclude simple repeats). The result is the effective
+               genome size.
+            o  using reads, count kmers and use the kmer distribution to estimate the
+               effective genomes size
+          The latter approach may be more accurate when the read type and lengths are given
+          but the result must be specific to a particular experiment.
+       o  I look at the Ensembl human genome GRCh38 both with and without repeat masking
+          The fasta files are from ftp.ensembl.org:/pub/release-99/fasta/homo_sapiens/dna
+            o  for Homo_sapiens.GRCh38.dna_rm.toplevel.fa.filtered
+               file:   Homo_sapiens.GRCh38.dna_rm.toplevel.fa.filtered
+               format: fasta
+               nseq:   194
+               nbase:  3099750718
+               base counts:
+               A   404287780  0.130
+               C   276416369  0.089
+               G   276691018  0.089
+               N  1737522095  0.561
+               T   404833456  0.131
+               
+               The 'effective genome size' is 1362228623. This is less than half (.49) the published counts of ~2.8e9.
+
+           o  for nexus:/net/bbi/vol1/data/genomes_stage/human_gsrc/Homo_sapiens.GRCh38.dna.toplevel.fa.finished
+              the effective genome size is 2.95e+09, which is 1.05x the published counts. Good enough.
+
+       o  I look at the Ensembl mouse genome GRCm38 using the finished fasta sequence file at
+          nexus:/net/bbi/vol1/data/genomes_stage/mouse_gsrc
+          /net/bbi/vol1/data/sw_install/kent_util/bin/faCount Mus_musculus.GRCm38.dna.toplevel.fa.finished | grep '^total' | awk '{printf("%3.2e\n",$2-$7);}'
+          2.65e+09
+          The published effective genome size is 2652783500. That's the same!
+
+       o  I look at the Ensembl macaque genome
+          nexus:/net/bbi/vol1/data/genomes_stage/macaque_gsrc
+          /net/bbi/vol1/data/sw_install/kent_util/bin/faCount Macaca_mulatta.Mmul_10.dna.toplevel.fa.finished | grep '^total' | awk '{printf("%3.2e\n",$2-$7);}'
+
+     /net/bbi/vol1/data/sw_install/kent_util/bin/faCount ${FASTA_FINISHED} | grep '^total' | awk '{printf("%3.2e\n",$2-$7);}'
+     2.94e+09
+
