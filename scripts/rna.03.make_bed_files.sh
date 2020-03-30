@@ -11,6 +11,10 @@ function setup_source_files_bed()
     exit -1
   fi
 
+  if [ -L "./${GTF_GZ}" ]
+  then
+    rm "./${GTF_GZ}"
+  fi
   ln -s ${GENOME_DIR}/${GTF_GZ} .
 
   echo | proc_stdout

@@ -43,15 +43,15 @@ mkdir -p $ATAC_DIR
 
 pushd $ATAC_DIR
 
-#setup_source_files
-#make_whitelist_regions_file
-#make_tss_file
-#compress_tss_temp_file
-#make_gene_bodies_file
-#compress_gene_bodies_temp_file
+setup_source_files
+make_whitelist_regions_file
+make_tss_file
+compress_tss_temp_file
+make_gene_bodies_file
+compress_gene_bodies_temp_file
 estimate_effective_genome_size
-#make_aligner_index
-#make_clean_directory
+make_aligner_index
+make_clean_directory
 
 popd
 

@@ -25,7 +25,17 @@ function setup_source_files()
   fi
 
   cp ${GENOME_DIR}/${CHROMOSOME_SIZES_FILE} .
+
+  if [ -L "./${FASTA_FINISHED}" ]
+  then
+    rm "./${FASTA_FINISHED}"
+  fi
   ln -s ${GENOME_DIR}/${FASTA_FINISHED} .
+
+  if [ -L "./${GTF_GZ}" ]
+  then
+    rm "./${GTF_GZ}"
+  fi
   ln -s ${GENOME_DIR}/${GTF_GZ} .
 
   echo | proc_stdout
@@ -65,7 +75,7 @@ function make_tss_file()
   echo | proc_stdout
 
   #
-  # Here we do the work.
+  # Here we make the file ${TSS_BED}.temp.
   #
   echo "Count gene_biotype entries in ${TSS_BED}.temp by type..." | proc_stdout
   awk '{print$9}' ${TSS_BED}.temp \
@@ -91,7 +101,7 @@ function make_tss_file()
 
 
   #
-  # Here we do the work.
+  # Here we final ${TSS_BED}.gz.
   #
   echo "Filter TSS bed file ${TSS_BED}.temp entries..." | proc_stdout
   cat ${TSS_BED}.temp \
@@ -108,11 +118,10 @@ function make_tss_file()
   echo "Make TSS gene map file ${TSS_GENE_MAP}..."
   cat tss.bed.temp \
   | grep -i -E "${SELECT_GENE_BIOTYPES}" \
-  | awk '{print$4,$7,$9}' \
+  | awk '{printf("%s\t%s\t%s\n",$4,$7,$9);}' \
   | sort -k1,1V -k2,2V -k3,3 \
   | uniq \
-  | less \
-  | awk 'BEGIN{FS=" "}{if($1 in short){short[$1]=short[$1]":"$2;biotype[$1]=biotype[$1]":"$3;}else{short[$1]=$2;biotype[$1]=$3}}END{for(gene in short) printf("%s %s %s\n",gene,short[gene],biotype[gene]);}' \
+  | awk 'BEGIN{FS="\t"}{if($1 in short){short[$1]=short[$1]":"$2;biotype[$1]=biotype[$1]":"$3;}else{short[$1]=$2;biotype[$1]=$3}}END{for(gene in short) printf("%s\t%s\t%s\n",gene,short[gene],biotype[gene]);}' \
   | sort -k1,1V > ${TSS_GENE_MAP}
   echo | proc_stdout
   echo 'Done.' | proc_stdout
@@ -169,7 +178,7 @@ function make_gene_bodies_file()
 
 
   #
-  # Here we do the work.
+  # Here we make the ${GENE_BODIES_BED}.temp file.
   #
   echo "Count gene_biotype entries in ${GENE_BODIES_BED}.temp by type..." | proc_stdout
   awk '{print$8}' ${GENE_BODIES_BED}.temp \
@@ -199,7 +208,7 @@ function make_gene_bodies_file()
 
 
   #
-  # Here we do the work.
+  # Here we make the ${GENE_BODIES_BED}.gz and ${GENE_BODIES_PLUS_UPSTREAM_BED}.gz files.
   #
   echo "Filter gene bodies bed file ${GENE_BODIES_BED}.temp entries..." | proc_stdout
   cat ${GENE_BODIES_BED}.temp \
@@ -219,12 +228,10 @@ function make_gene_bodies_file()
 
   echo "Make gene bodies gene map file ${GENE_BODIES_GENE_MAP}..."
   cat ${GENE_BODIES_BED}.temp \
-    | grep -i -E "${SELECT_GENE_BIOTYPES}" \
-    | awk '{print$4,$7,$9}' \
+    | awk '{printf( "%s\t%s\t%s\n",$4,$7,$8);}' \
     | sort -k1,1V -k2,2V -k3,3 \
     | uniq \
-    | less \
-    | awk 'BEGIN{FS=" "}{if($1 in short){short[$1]=short[$1]":"$2;biotype[$1]=biotype[$1]":"$3;}else{short[$1]=$2;biotype[$1]=$3}}END{for(gene in short) printf("%s %s %s\n",gene,short[gene],biotype[gene]);}' \
+    | awk 'BEGIN{FS="\t"}{if($1 in short){short[$1]=short[$1]":"$2;biotype[$1]=biotype[$1]":"$3;}else{short[$1]=$2;biotype[$1]=$3}}END{for(gene in short) printf("%s\t%s\t%s\n",gene,short[gene],biotype[gene]);}' \
     | sort -k1,1V > ${GENE_BODIES_GENE_MAP}
   echo | proc_stdout
   echo 'Done.' | proc_stdout
