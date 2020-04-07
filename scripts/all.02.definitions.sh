@@ -21,7 +21,7 @@ STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
 #   ATAC_DIR       sci-ATAC-seq files
 #
 GENOME_DIR="${STAGE_DIR}/${ORGANISM}_gsrc"
-RNA_DIR="${STAGE_DIR}/${ORGANISM}"
+RNA_DIR="${STAGE_DIR}/${ORGANISM}_rna"
 STAR_DIR="${STAGE_DIR}/${ORGANISM}_star"
 ATAC_DIR="${STAGE_DIR}/${ORGANISM}_atac"
 
@@ -53,12 +53,13 @@ TAG="TAG_${TAG_DATE}"
 # Manipulate stdout.
 # Usage: <command> | proc_stdout
 #      or
-#        <command> | proc_stdout <filename>
+#        <command> | proc_stdout <filename> [<string>]
 #
 # The first example writes to stdout and ${LOG}
 # The second example also writes to file <filename>
 # with a 'tag', given by ${TAG},  prepended to each
-# line.
+# line. Optional <string> follows (immediately) ${TAG}, if
+# it is included.
 #
 function proc_stdout()
 {
@@ -71,9 +72,14 @@ function proc_stdout()
 
   if [ ! -z "$1" ]
   then
+    EXTENDED_TAG="$TAG"
+    if [ ! -z "$2" ]
+    then
+      EXTENDED_TAG="$EXTENDED_TAG $2"
+    fi    
     for aline in "${text_array[@]}"
     do
-      echo -n "$TAG $aline" >> ${1}
+      echo -n "$EXTENDED_TAG $aline" >> ${1}
     done
   fi
   set -u

@@ -23,7 +23,11 @@ ENSEMBL_GTF_URL="ftp.ensembl.org:/pub/release-99/gtf/homo_sapiens"
 GTF_GZ="Homo_sapiens.GRCh38.99.gtf.gz"
 
 #
-# The genome sequences selected for the alignments can be chosen by
+# Note: at the time of this writing, the 'SEQUENCES_TO_KEEP_ALIGNER'
+#       variable is unused because the function
+#       'sequences_to_keep_ref()' is called in the script
+#       'genome.01.run.sh'. Find additional details below.
+# The genome sequences selected for alignments can be chosen by
 # checking the fasta headers for the 'REF' designation (do this
 # using the 'sequences_to_keep_ref()' function in genome.01.run.sh)
 # or by using an explicit list of required sequence names (do this
