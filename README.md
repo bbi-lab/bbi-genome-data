@@ -7,7 +7,7 @@
 ## Build programs
 
  ```
-  cd bbi-genome-data/src/seq_util
+  cd bbi-genome-data/src/sequtil
   make fasta_getseqs
   make libsquid md5 md5_seq
   ```
