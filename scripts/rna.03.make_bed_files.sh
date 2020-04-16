@@ -70,6 +70,7 @@ function get_gene_annotations()
 {
   echo "Step 1: extracting gene annotations from GTF file" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  echo "Included gene biotypes: ${RE_GENE_BIOTYPES}" | proc_stdout ${RECORD} gtf_include_biotypes
   zcat $GTF_GZ | grep -v "^#" \
   | awk 'BEGIN {
       FS = "\t";
@@ -246,11 +247,13 @@ function extend_3p_utr_gene_annotations()
 #
 # Step 4: extending 3' UTRs of transcript annotations
 #
+EXTENSION="500"
 function extend_3p_utr_transcript_annotations()
 {
   echo "Step 4: extending 3' UTRs of transcript annotations" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
-  for EXTENSION in "500"; do
+  echo "3' UTRs extended by ${EXTENSION} bps" | proc_stdout ${RECORD} utr_extension
+  for EXTENSION in $EXTENSION; do
       awk -v EXTENSION=$EXTENSION 'BEGIN { OFS = "\t"; } {
           if ($6 == "+") {
               $3 = $3 + EXTENSION;

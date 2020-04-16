@@ -41,6 +41,7 @@ function sequences_to_keep_named()
 {
   echo "Keep the named sequences for read alignments in ${FASTA}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  echo "Sequences kept from fasta: ${SEQUENCES_TO_KEEP_ALIGNER}" | proc_stdout ${RECORD} fasta_seqs_kept
   echo | proc_stdout
   echo "$SEQUENCES_TO_KEEP_ALIGNER" | sed 's/[ ][ ]*/\n/g' > $FINAL_IDS_FILE
   echo | proc_stdout

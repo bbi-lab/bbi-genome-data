@@ -8,11 +8,11 @@ function get_gtf_file()
   rm -f ${README}.gtf
 
   echo "Download and uncompress GTF file ${GTF_GZ}..." | proc_stdout
-  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout ${RECORD} gtf_download_date
   echo "URL is ${ENSEMBL_GTF_URL}" | proc_stdout
   echo "GTF filename is $GTF_GZ" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
-  echo "Genome GTF file URL: ${ENSEMBL_GTF_URL}/$GTF_GZ" | proc_stdout ${RECORD}
+  echo "Genome GTF file URL: ${ENSEMBL_GTF_URL}/$GTF_GZ" | proc_stdout ${RECORD} gtf_url
   wget --no-verbose ${ENSEMBL_GTF_URL}/$GTF_GZ 2>&1 | proc_stdout
   echo | proc_stdout
 

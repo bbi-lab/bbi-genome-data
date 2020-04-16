@@ -61,10 +61,12 @@ function make_aligner_index()
   echo "$STAR_ALIGNER --runThreadN 4 --runMode genomeGenerate --genomeDir $STAR_DIR --genomeFastaFiles ${STAR_DIR}/${FASTA_FINISHED} --sjdbGTFfile ${RNA_DIR}/tmp.transcripts.3p.UTR.extended.500.bp.gtf --sjdbOverhang 100" >> ${STAR_DIR}/run_star_index.sh
   echo >> ${STAR_DIR}/run_star_index.sh
 
-  echo "submit run_bowtie2build.sh to cluster" | proc_stdout
+  echo "submit run_star_index.sh to cluster" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   qsub ${STAR_DIR}/run_star_index.sh
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+
+  #echo $(( ( $(stat -c%s ${STAR_DIR}/Genome) + $(stat -c%s ${STAR_DIR}/SAindex) + $(stat -c%s ${STAR_DIR}/SA) )/1000000000 + 5)) | proc_stdout ${RECORD} alignment_gigs 
 
   echo | proc_stdout
   echo 'Done.' | proc_stdout
