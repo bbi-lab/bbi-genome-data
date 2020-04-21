@@ -335,7 +335,9 @@ function extend_3p_utr_transcript_annotations()
           } else if ($6 == "-") {
               effective_extension = $10 - $2;
           }
-  
+          if (effective_extension < 0) {
+              effective_extension = 0
+          }
           print $4 "\t" effective_extension;
       }' \
       > tmp.transcripts.3p.UTR.extended.$EXTENSION.bp.effective.values.txt
