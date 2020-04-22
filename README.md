@@ -22,8 +22,10 @@ qlogin -l mfree=20G
 ```
 
 ## Build programs
+Once you have a qlogin session running, clone the repository bbi-genome-data using:
 
- ```
+  ```
+  git clone https://github.com/bbi-lab/bbi-genome-data.git
   cd bbi-genome-data/src/sequtil
   make fasta_getseqs
   make libsquid md5 md5_seq
