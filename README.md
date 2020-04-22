@@ -4,6 +4,23 @@
 
 *bbi-genome-data* consists of bash scripts and programs for preparing genome-related files for the *bbi-scirna*\* and *bbi-sciatac-*\* processing pipelines.
 
+## Prerequisites
+1. As the genome building pipeline is run interactively, please use a terminal multiplexer such as tmux. tmux sessions are persistent which means that programs in tmux will continue to run even if you get disconnected. You can start a tmux session by using:
+```
+module load tmux/latest
+tmux
+```
+If you get disconnected, you can return to the head node you were using (grid-head1 or grid-head2) and type:
+```
+tmux attach -t session-name
+```
+which will return you to your session. See a handy tmux tutorial here[https://www.hostinger.com/tutorials/tmux-beginners-guide-and-cheat-sheet/].
+
+2. Always start with a qlogin session before you begin the pipeline. This can be done by
+```
+qlogin -l mfree=20G
+```
+
 ## Build programs
 
  ```
@@ -92,4 +109,3 @@
       *  calculate effective genome size: http://koke.asrc.kanazawa-u.ac.jp/HOWTO/kmer-genomesize.html, https://khmer.readthedocs.io/en/v2.1.1/, https://bioinformatics.uconn.edu/genome-size-estimation-tutorial/#, and  https://deeptools.readthedocs.io/en/develop/content/feature/effectiveGenomeSize.html. The effective genome size is used in the ATAC analysis by MACS2.
       *  the chromosome sequences in the genome fasta file must be in a specific order; that is, numerically, XY, and MT. For example, for human, 1, 2, 3, ..., 22, X, Y, MT, ... The script *scripts/fasta_sort.sh* should make a correctly sorted fasta file.
   *  I feel ambivalent about these scripts. I want to automate downloading, preparing, and checking the files. However, checking the resulting output files requires some care and I am concerned that the automation, coupled with the large amount of diagnostic information in the *log.out* files, may overwhelm the user and result in some complacency. Additionally, I strive to eliminate code duplication in the scripts, which results in unfortunate complexity. I am not confident that I found an effective balance in these scripts.
-
