@@ -8,13 +8,13 @@ function get_fasta_file
   rm -f ${README}.dna
 
   echo "Download and uncompress fasta file" | proc_stdout
-  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout ${RECORD} fastq_download_date
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout ${RECORD} fasta_download_date
 
   echo "URL is ${ENSEMBL_DNA_URL}" | proc_stdout
   echo "Fasta filename is $FASTA_GZ" | proc_stdout
 
   echo "Download fasta file..." | proc_stdout
-  echo "Genome fasta file URL: ${ENSEMBL_DNA_URL}/$FASTA_GZ" | proc_stdout ${RECORD} fastq_url
+  echo "Genome fasta file URL: ${ENSEMBL_DNA_URL}/$FASTA_GZ" | proc_stdout ${RECORD} fasta_url
 
   wget --no-verbose ${ENSEMBL_DNA_URL}/$FASTA_GZ 2>&1 | proc_stdout
   echo | proc_stdout
@@ -63,7 +63,7 @@ function get_fasta_info()
   echo "Get fasta sequence headers in $FASTA file..." | proc_stdout
   grep '^>' $FASTA > $FASTA.headers
   echo | proc_stdout
- 
+
   echo "CHECKPOINT" | proc_stdout
   echo "Fasta sequence header in $FASTA file..." | proc_stdout
   cat $FASTA.headers | proc_stdout
@@ -79,4 +79,3 @@ function get_fasta_info()
   echo 'Done.' | proc_stdout
   echo | proc_stdout
 }
-
