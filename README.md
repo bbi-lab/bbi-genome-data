@@ -58,7 +58,7 @@ Once you have a qlogin session running, clone the repository bbi-genome-data usi
   *  run `atac.01.run.sh <organism>` to prepare files for the sci-ATAC-seq processing pipeline for *&lt;organism&gt;*
   *  run `atac.01.run.sh barnyard` to prepare human-mouse barnyard files for the sci-ATAC-seq processing pipeline
 
-Note: All of the scripts above are meant to be run from a qlogin session only. Submitting any of these as a job to the cluster (via qsub) will generate an error. For example, run the script `genome.01.run.sh <organism>` using:
+Note: All of the scripts above are meant to be run from a qlogin session only. Submitting any of these as a job to the cluster (via qsub) will generate an error. For example, run the script `genome.01.run.sh <organism>` as follows:
 ```
 ./genome.01.run.sh <organism>
 ```
