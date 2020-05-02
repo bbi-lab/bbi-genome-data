@@ -7,7 +7,7 @@ function get_gtf_file()
   rm -f ${CHECKSUMS}.gtf
   rm -f ${README}.gtf
 
-  if [ "${WGET_GTF_GZ}" ]
+  if [ "${WGET_GTF_GZ}" == "1" ]
   then
 
     echo "Download and uncompress GTF file ${GTF_GZ}..." | proc_stdout
@@ -49,9 +49,6 @@ function get_gtf_file()
 
     echo "Copy GTF file..." | proc_stdout
     echo "Copy GTF file: ${ENSEMBL_GTF_URL}/$GTF_GZ" | proc_stdout ${RECORD} gtf_url
-
-    wget --no-verbose ${ENSEMBL_GTF_URL}/$GTF_GZ 2>&1 | proc_stdout
-    echo | proc_stdout
 
     cp "${ENSEMBL_GTF_URL}/$GTF_GZ" .
 

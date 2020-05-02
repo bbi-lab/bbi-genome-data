@@ -7,7 +7,7 @@ function get_fasta_file
   rm -f ${CHECKSUMS}.dna
   rm -f ${README}.dna
 
-  if [ "${WGET_FASTA_GZ}" ]
+  if [ "${WGET_FASTA_GZ}" == "1" ]
   then
 
     echo "Download and uncompress fasta file ${FASTA_GZ}..." | proc_stdout
