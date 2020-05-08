@@ -1,12 +1,15 @@
 #!/bin/bash
 
+GROUP="mouse"
 ORGANISM="mouse"
 
 ENSEMBL_DNA_URL="ftp.ensembl.org:/pub/release-99/fasta/mus_musculus/dna"
 FASTA_GZ="Mus_musculus.GRCm38.dna.toplevel.fa.gz"
+WGET_FASTA_GZ=1
 
 ENSEMBL_GTF_URL="ftp.ensembl.org:/pub/release-99/gtf/mus_musculus"
 GTF_GZ="Mus_musculus.GRCm38.99.gtf.gz"
+WGET_GTF_GZ=1
 
 PAR_BED="par_${ORGANISM}.bed"
 

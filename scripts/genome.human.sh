@@ -1,12 +1,15 @@
 #!/bin/bash
 
+GROUP="human"
 ORGANISM="human"
 
 ENSEMBL_DNA_URL="ftp.ensembl.org:/pub/release-99/fasta/homo_sapiens/dna"
 FASTA_GZ="Homo_sapiens.GRCh38.dna.toplevel.fa.gz"
+WGET_FASTA_GZ=1
 
 ENSEMBL_GTF_URL="ftp.ensembl.org:/pub/release-99/gtf/homo_sapiens"
 GTF_GZ="Homo_sapiens.GRCh38.99.gtf.gz"
+WGET_GTF_GZ=1
 
 
 SEQUENCES_TO_KEEP_ALIGNER="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT"

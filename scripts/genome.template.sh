@@ -1,26 +1,47 @@
 #!/bin/bash
 
 #
-# Set organism to a distinct common name. The ORGANISM variable is
-# used to name the directories that will contain the output files.
+# GROUP and ORGANISM define primarily the directories in which the
+# output files are written. The file paths have the form
+#   $STAGE_DIR/$GROUP/$ORGANISM_(gsrc|rna|star|atac)
+# In addition, the ORGANISM variable is used to name the index
+# files required by the aligners and certain *.bed files.
+# We adopted the convention of giving usually the GROUP the same
+# name as the ORGANISM; for example,
+#   genomes_stage/human/human_rna
+# In the case of custom genomes, GROUP is set to 'custom_genomes',
+# and the ORGANISM is set to a distinctive name that includes the
+# organism, for example, 'noah.macaque'.
 #
+GROUP="human"
 ORGANISM="human"
 
 #
 # Set the URL for the Ensembl directory that contains the compressed
 # genome fasta file and the related CHECKSUM and README files. And
-# set the name of the required compressed genome fasta file.
-#
+# set the name of the required compressed genome fasta file.  The file
+# can be downloaded by http or ftp using wget, or copied from a local
+# directory.
+# Set WGET_FASTA_GZ=1 to download by http or ftp or
+# set WGET_FASTA_GZ=0 to copy from a local directory.
+# In both cases, the file must be gzip compressed.
 ENSEMBL_DNA_URL="ftp.ensembl.org:/pub/release-99/fasta/homo_sapiens/dna"
 FASTA_GZ="Homo_sapiens.GRCh38.dna.toplevel.fa.gz"
+WGET_FASTA_GZ=1
 
 #
 # Set the URL for the Ensembl directory that contains the compressed
 # genome GTF file and the related CHECKSUM and README files. And
-# set the name of the required compressed GTF file.
+# set the name of the required compressed GTF file. The file
+# can be downloaded by http or ftp using, or copied from a local
+# directory.
+# In both cases, the file must be gzip compressed.
+# Set WGET_GTF_GZ=1 to download by http or ftp or
+# set WGET_GTF_GZ=0 to copy from a local directory.
 #
 ENSEMBL_GTF_URL="ftp.ensembl.org:/pub/release-99/gtf/homo_sapiens"
 GTF_GZ="Homo_sapiens.GRCh38.99.gtf.gz"
+WGET_GTF_GZ=1
 
 #
 # Note: at the time of this writing, the 'SEQUENCES_TO_KEEP_ALIGNER'

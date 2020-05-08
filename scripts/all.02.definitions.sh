@@ -20,10 +20,10 @@ STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
 #   STAR_DIR       STAR aligner index files
 #   ATAC_DIR       sci-ATAC-seq files
 #
-GENOME_DIR="${STAGE_DIR}/${ORGANISM}/${ORGANISM}_gsrc"
-RNA_DIR="${STAGE_DIR}/${ORGANISM}/${ORGANISM}_rna"
-STAR_DIR="${STAGE_DIR}/${ORGANISM}/${ORGANISM}_star"
-ATAC_DIR="${STAGE_DIR}/${ORGANISM}/${ORGANISM}_atac"
+GENOME_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_gsrc"
+RNA_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_rna"
+STAR_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_star"
+ATAC_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_atac"
 
 #
 # Common file names.

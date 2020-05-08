@@ -1,13 +1,16 @@
 #!/bin/bash
 
 
+GROUP="macaque"
 ORGANISM="macaque"
 
 ENSEMBL_DNA_URL="ftp.ensembl.org:/pub/release-99/fasta/macaca_mulatta/dna"
 FASTA_GZ="Macaca_mulatta.Mmul_10.dna.toplevel.fa.gz"
+WGET_FASTA_GZ=1
 
 ENSEMBL_GTF_URL="ftp.ensembl.org:/pub/release-99/gtf/macaca_mulatta"
 GTF_GZ="Macaca_mulatta.Mmul_10.99.gtf.gz"
+WGET_GTF_GZ=1
 
 
 #PAR_BED=""
