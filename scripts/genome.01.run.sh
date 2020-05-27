@@ -4,32 +4,34 @@
 # Build source genome files (except for barnyard).
 #
 
+
+if [ "$1" == "" ]
+then
+  echo "Usage: genome.01.run.sh <organism_name>"
+  exit -1
+fi
+
+
 set -o pipefail  # trace ERR through pipes
 set -o errtrace  # trace ERR through 'time command' and other functions
 set -o nounset   # set -u : exit the script if you try to use an uninitialised variable
 set -o errexit   # set -e : exit the script if any statement returns a non-true return value
 
-DEFINITION="$1"
-
-if [ "$DEFINITION" == "" ]
-then
-  echo "Usage: genome.01.run.sh <definition>"
-  exit -1
-fi
-
-
-DEFINITION_FILE="genome.${DEFINITION}.sh"
-if [ ! -f "$DEFINITION_FILE" ]
-then
-  echo "ERROR: unable to find file \'$DEFINITION_FILE\' for $DEFINITION. Exiting."
-  exit -1
-fi
-
-
 
 SCRIPT_DIR="."
+source ${SCRIPT_DIR}/all.00.definitions.sh
 
-source ${SCRIPT_DIR}/$DEFINITION_FILE
+
+ORGANISM_NAME="$1"
+ORGANISM_DEFINITION_FILE="${ORGANISM_FILE_DIR}/genome.${ORGANISM_NAME}.sh"
+if [ ! -f "$ORGANISM_DEFINITION_FILE" ]
+then
+  echo "ERROR: unable to find file \'$ORGANISM_DEFINITION_FILE\' for $ORGANISM_NAME. Exiting."
+  exit -1
+fi
+
+
+source $ORGANISM_DEFINITION_FILE
 source ${SCRIPT_DIR}/all.02.definitions.sh
 source ${SCRIPT_DIR}/genome.02.definitions.sh
 source ${SCRIPT_DIR}/genome.03.get_fasta_file.sh

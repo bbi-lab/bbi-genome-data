@@ -46,9 +46,10 @@ Once you have a qlogin session running, clone the repository bbi-genome-data usi
   *  edit the script *all.02.definitions.sh* to set the variable STAGE_DIR, where the scripts will make their output directories.
 
 
-## Make genome-specific definition files.
+## Make organism-specific definition files.
 
-  *  copy the file *scripts/genome.template.sh* to *genome.&lt;organism&gt;.sh* and edit it as required for the organism. The variables are described in *genome.template.sh*.
+  *  organism-specific definition files are stored in the bbi-genome-data/organisms directory
+  *  copy the file *organisms/genome.template.sh* to *genome.&lt;organism&gt;.sh* and edit it as required for the organism. The variables are described in *genome.template.sh*.
 
 ## Run the scripts
   *  run `genome.01.run.sh <organism>` to download and prepare the genome fasta and gtf files for *&lt;organism&gt;*
