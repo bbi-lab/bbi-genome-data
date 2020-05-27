@@ -17,7 +17,7 @@ function barnyard_setup_source_files()
   #
   # Copy and edit human fasta and gtf files.
   # 
-  source ${SCRIPT_DIR}/genome.human.sh
+  source ${ORGANISM_FILE_DIR}/genome.human.sh
   source ${SCRIPT_DIR}/all.02.definitions.sh
   SRC_HUMAN_FASTA_FINISHED="${GENOME_DIR}/${FASTA_FINISHED}"
 
@@ -42,7 +42,7 @@ function barnyard_setup_source_files()
   #
   # Copy and edit mouse fasta and gtf files.
   # 
-  source ${SCRIPT_DIR}/genome.mouse.sh
+  source ${ORGANISM_FILE_DIR}/genome.mouse.sh
   source ${SCRIPT_DIR}/all.02.definitions.sh
   SRC_MOUSE_FASTA_FINISHED="${GENOME_DIR}/${FASTA_FINISHED}"
 
@@ -67,7 +67,7 @@ function barnyard_setup_source_files()
   #
   # Concatenate fasta, gtf, and chromosome_sizes files.
   #
-  source ${SCRIPT_DIR}/genome.barnyard.sh
+  source ${ORGANISM_FILE_DIR}/genome.barnyard.sh
   source ${SCRIPT_DIR}/all.02.definitions.sh
 
   echo "Concatenate ${HUMAN_FASTA_FINISHED} ${MOUSE_FASTA_FINISHED} into ${BARNYARD_FASTA_FINISHED}..." | proc_stdout

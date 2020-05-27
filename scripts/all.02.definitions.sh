@@ -8,7 +8,7 @@
 #
 # Staging directory.
 #
-STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
+STAGE_DIR="/net/bbi/vol1/data/genomes_stage_test1"
 
 
 #

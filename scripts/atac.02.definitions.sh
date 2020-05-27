@@ -23,8 +23,8 @@ FACOUNT="/net/bbi/vol1/data/sw_install/kent_util/bin/faCount"
 #
 # R scripts.
 #
-R_GENERATE_TSS_FILE="/net/bbi/vol1/data/src/genome_data/sciatac/R/generate_tss_file.R"
-R_GENERATE_GENE_BODY_FILE="/net/bbi/vol1/data/src/genome_data/sciatac/R/generate_gene_body_file.R"
+R_GENERATE_TSS_FILE="/net/bbi/vol1/data/scripts/bbi-genome-data/R/generate_tss_file.R"
+R_GENERATE_GENE_BODY_FILE="/net/bbi/vol1/data/scripts/bbi-genome-data/R/generate_gene_body_file.R"
 
 #
 # bowtie2-build index prefix.
