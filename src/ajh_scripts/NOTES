@@ -1,0 +1,8 @@
+== ajh_scripts
+
+These scripts are copied from 
+
+  /net/trapnell/vol1/ajh24/common_data/sciatac_pipeline_data
+
+and they serve as models for the sci-ATAC-seq genome file
+preparation scripts in this repository.
