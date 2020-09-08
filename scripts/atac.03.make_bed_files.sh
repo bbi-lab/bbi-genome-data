@@ -71,12 +71,12 @@ function make_tss_file()
   ${BEDTOOLS} --version | proc_stdout ${RECORD}
   echo | proc_stdout
 
-  Rscript $R_GENERATE_TSS_FILE $GTF_GZ ${TSS_BED}.temp
-  echo | proc_stdout
-
   #
   # Here we make the file ${TSS_BED}.temp.
   #
+  Rscript $R_GENERATE_TSS_FILE $GTF_GZ ${TSS_BED}.temp
+  echo | proc_stdout
+
   echo "Count gene_biotype entries in ${TSS_BED}.temp by type..." | proc_stdout
   awk '{print$9}' ${TSS_BED}.temp \
     | sort \
@@ -101,7 +101,7 @@ function make_tss_file()
 
 
   #
-  # Here we final ${TSS_BED}.gz.
+  # Here we make the final ${TSS_BED}.gz.
   #
   echo "Filter TSS bed file ${TSS_BED}.temp entries..." | proc_stdout
   cat ${TSS_BED}.temp \
@@ -173,13 +173,13 @@ function make_gene_bodies_file()
   ${BEDTOOLS} --version | proc_stdout ${RECORD}
   echo | proc_stdout
 
+  #
+  # Here we make the ${GENE_BODIES_BED}.temp file.
+  #
   Rscript $R_GENERATE_GENE_BODY_FILE $GTF_GZ ${GENE_BODIES_BED}.temp
   echo | proc_stdout
 
 
-  #
-  # Here we make the ${GENE_BODIES_BED}.temp file.
-  #
   echo "Count gene_biotype entries in ${GENE_BODIES_BED}.temp by type..." | proc_stdout
   awk '{print$8}' ${GENE_BODIES_BED}.temp \
     | sort \
