@@ -22,7 +22,8 @@ qlogin -l mfree=20G
 ```
 
 ## Build programs
-Once you have a qlogin session running, clone the repository bbi-genome-data using:
+Once you have a qlogin session running, clone the repository bbi-genome-data and build
+the required programs using:
 
   ```
   git clone https://github.com/bbi-lab/bbi-genome-data.git
@@ -30,6 +31,7 @@ Once you have a qlogin session running, clone the repository bbi-genome-data usi
   make fasta_getseqs
   make libsquid md5 md5_seq
   ```
+
 
 ## Setup
 
@@ -44,7 +46,9 @@ Once you have a qlogin session running, clone the repository bbi-genome-data usi
       *  set the variables R_GENERATE_TSS_FILE and R_GENERATE_GENE_BODY_FILE to the paths for the *generate_tss_file.R* and *generate_gene_body_file.R* scripts
       *  set the variable BEDTOOLS to the path for the *bedtools* program
   *  edit the script *all.02.definitions.sh* to set the variable STAGE_DIR, where the scripts will make their output directories.
-
+  *  install James Kent's *faCount* utility in a convenient directory and edit scripts/atac.02.definitions.sh to set the variable FACOUNT to its
+     path. Source code and binaries for *faCount* are available from http://hgdownload.soe.ucsc.edu/admin/exe/ and
+     https://github.com/ucscGenomeBrowser/kent/tree/master/src
 
 ## Make organism-specific definition files.
 
