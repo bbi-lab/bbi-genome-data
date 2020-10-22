@@ -32,7 +32,6 @@ the required programs using:
   make libsquid md5 md5_seq
   ```
 
-
 ## Setup
 
   *  move the programs *fasta_getseqs* and *md5_seq*, which you made in *src/seq_util*, to a convenient directory, if desired
