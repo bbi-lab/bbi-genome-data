@@ -34,7 +34,7 @@ function make_aligner_index()
   echo "Uncompress gtf file ${GTF_GZ}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   zcat ${GTF_GZ} > ${GTF}
-  
+
   echo "Build STAR genome index using ${FASTA_FINISHED} and ${GTF_GZ}..." | proc_stdout ${RECORD}
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout ${RECORD}
 
@@ -53,10 +53,10 @@ function make_aligner_index()
   echo >> ${STAR_DIR}/run_star_index.sh
   echo "source /etc/profile.d/modules.sh" >> ${STAR_DIR}/run_star_index.sh
   echo "module load modules modules-init modules-gs" >> ${STAR_DIR}/run_star_index.sh
-  echo "module load mpfr/2.4.1"  >> ${STAR_DIR}/run_star_index.sh
   echo "module load gmp/6.1.2"  >> ${STAR_DIR}/run_star_index.sh
-  echo "module load gcc/4.7.0"  >> ${STAR_DIR}/run_star_index.sh
-  echo "module load STAR/2.5.2b"  >> ${STAR_DIR}/run_star_index.sh
+  echo "module load mpfr/4.0.1"  >> ${STAR_DIR}/run_star_index.sh
+  echo "module load gcc/8.1.0"  >> ${STAR_DIR}/run_star_index.sh
+  echo "module load STAR/2.6.1d"  >> ${STAR_DIR}/run_star_index.sh
   echo >> ${STAR_DIR}/run_star_index.sh
   echo "$STAR_ALIGNER --runThreadN 4 --runMode genomeGenerate --genomeDir $STAR_DIR --genomeFastaFiles ${STAR_DIR}/${FASTA_FINISHED} --sjdbGTFfile ${RNA_DIR}/tmp.transcripts.3p.UTR.extended.500.bp.gtf --sjdbOverhang 100" >> ${STAR_DIR}/run_star_index.sh
   echo >> ${STAR_DIR}/run_star_index.sh
@@ -66,11 +66,10 @@ function make_aligner_index()
   qsub ${STAR_DIR}/run_star_index.sh
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
-  #echo $(( ( $(stat -c%s ${STAR_DIR}/Genome) + $(stat -c%s ${STAR_DIR}/SAindex) + $(stat -c%s ${STAR_DIR}/SA) )/1000000000 + 5)) | proc_stdout ${RECORD} alignment_gigs 
+  #echo $(( ( $(stat -c%s ${STAR_DIR}/Genome) + $(stat -c%s ${STAR_DIR}/SAindex) + $(stat -c%s ${STAR_DIR}/SA) )/1000000000 + 5)) | proc_stdout ${RECORD} alignment_gigs
 
   echo | proc_stdout
   echo 'Done.' | proc_stdout
   echo | proc_stdout
 
 }
-
