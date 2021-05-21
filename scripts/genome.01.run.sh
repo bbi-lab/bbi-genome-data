@@ -50,7 +50,7 @@ sequences_to_keep_ref
 filter_fasta_file
 finish_fasta_file
 compress_finish_fasta_file
-make_chromosome_sizes_file
+make_chromosome_sizes_files
 get_gtf_file
 get_gtf_info
 make_clean_directory

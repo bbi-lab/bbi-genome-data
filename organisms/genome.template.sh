@@ -56,15 +56,25 @@ WGET_GTF_GZ=1
 # genome.01.run.sh). In the latter case, list the required
 # sequence names in the variable SEQUENCES_TO_KEEP_ALIGNER below.
 #
-SEQUENCES_TO_KEEP_ALIGNER="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT"
+# SEQUENCES_TO_KEEP_ALIGNER="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT"
+SEQUENCES_TO_KEEP_ALIGNER=""
 
 #
 # The genome sequences selected for the analysis, which typically
 # excludes the mitochondrial chromosome and unplaced and
 # unlocalized scaffolds. The required sequence names must be
-# listed explicitly in the variable SEQUENCES_TO_KEEP_ANALYSIS
+# listed explicitly in the variable SEQUENCES_TO_KEEP_ATAC_ANALYSIS
 # below.
-SEQUENCES_TO_KEEP_ANALYSIS="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y"
+# SEQUENCES_TO_KEEP_ATAC_ANALYSIS="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y"
+SEQUENCES_TO_KEEP_ATAC_ANALYSIS=""
+
+#
+# The genome sequences including mitochrondial selected for the analysis,
+# which typically excludes the unplaced and unlocalized scaffolds. The
+# required sequence names must be listed explicitly in the variable
+# SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS below.
+# SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT"
+SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS=""
 
 #
 # The transcript gene_biotypes to select from the GTF file. The

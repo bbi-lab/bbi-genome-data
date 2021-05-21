@@ -163,25 +163,48 @@ function compress_finish_fasta_file()
 #
 # Get sequence/chromosome sizes.
 #
-function make_chromosome_sizes_file()
+function make_chromosome_sizes_files()
 {
   echo "samtools version: " | proc_stdout
   ${SAMTOOLS} --version | proc_stdout
   echo | proc_stdout
- 
- 
+
   echo "Make chromosome sizes file ${CHROMOSOME_SIZES_FILE}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   ${SAMTOOLS} faidx $FASTA_FILTERED
-  REXP=`echo "$SEQUENCES_TO_KEEP_ANALYSIS" \
+  cat $FASTA_FILTERED.fai | awk '{printf( "%s\t%s\n",$1,$2); }' > $CHROMOSOME_SIZES_FILE
+  echo | proc_stdout
+
+  echo "CHECKPOINT" | proc_stdout
+  cat $CHROMOSOME_SIZES_FILE | proc_stdout
+  echo | proc_stdout 
+ 
+  echo "Make sci-ATAC chromosome sizes file ${CHROMOSOME_SIZES_ATAC_FILE}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  ${SAMTOOLS} faidx $FASTA_FILTERED
+  REXP=`echo "$SEQUENCES_TO_KEEP_ATAC_ANALYSIS" \
     | sed 's/[ ][ ]*/|/g' \
     | sed 's/^/(/' \
     | sed 's/$/)/'`
-  cat $FASTA_FILTERED.fai | awk '{if($1~/^'$REXP'$/) { printf( "%s\t%s\n",$1,$2); } }' > $CHROMOSOME_SIZES_FILE
+  cat $FASTA_FILTERED.fai | awk '{if($1~/^'$REXP'$/) { printf( "%s\t%s\n",$1,$2); } }' > $CHROMOSOME_SIZES_ATAC_FILE
   echo | proc_stdout
  
   echo "CHECKPOINT" | proc_stdout
-  cat $CHROMOSOME_SIZES_FILE | proc_stdout
+  cat $CHROMOSOME_SIZES_ATAC_FILE | proc_stdout
+  echo | proc_stdout
+
+  echo "Make sci-ATAC chromosome with Mt sizes file ${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  ${SAMTOOLS} faidx $FASTA_FILTERED
+  REXP=`echo "$SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS" \
+    | sed 's/[ ][ ]*/|/g' \
+    | sed 's/^/(/' \
+    | sed 's/$/)/'`
+  cat $FASTA_FILTERED.fai | awk '{if($1~/^'$REXP'$/) { printf( "%s\t%s\n",$1,$2); } }' > $CHROMOSOME_WITH_MT_SIZES_ATAC_FILE
+  echo | proc_stdout
+
+  echo "CHECKPOINT" | proc_stdout
+  cat $CHROMOSOME_WITH_MT_SIZES_ATAC_FILE | proc_stdout
   echo | proc_stdout
 
   echo 'Done.' | proc_stdout

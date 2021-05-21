@@ -6,9 +6,15 @@ function setup_source_files()
   echo "Make copies of and soft links to required files from ${GENOME_DIR}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
-  if [ ! -f "${GENOME_DIR}/${CHROMOSOME_SIZES_FILE}" ]
+  if [ ! -f "${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE}" ]
   then
-    echo "ERROR: cannot find file ${GENOME_DIR}/${CHROMOSOME_SIZES_FILE}. Exiting..." | proc_stdout
+    echo "ERROR: cannot find file ${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE}. Exiting..." | proc_stdout
+    exit -1
+  fi
+
+  if [ ! -f "${GENOME_DIR}/${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE}" ]
+  then
+    echo "ERROR: cannot find file ${GENOME_DIR}/${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE}. Exiting..." | proc_stdout
     exit -1
   fi
 
@@ -24,7 +30,8 @@ function setup_source_files()
     exit -1
   fi
 
-  cp ${GENOME_DIR}/${CHROMOSOME_SIZES_FILE} .
+  cp ${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE} .
+  cp ${GENOME_DIR}/${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} .
 
   if [ -L "./${FASTA_FINISHED}" ]
   then
@@ -48,12 +55,22 @@ function make_whitelist_regions_file()
 {
   echo "Make whitelist regions bed file ${WHITELIST_REGIONS_BED}..."  | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
-  cat $CHROMOSOME_SIZES_FILE \
+  cat $CHROMOSOME_SIZES_ATAC_FILE \
   | awk 'BEGIN{OFS="\t"}{ print $1,"1",$2;}' > $WHITELIST_REGIONS_BED
 
   echo "CHECKPOINT" | proc_stdout
   echo "Contents of file ${WHITELIST_REGIONS_BED}..." | proc_stdout
   cat $WHITELIST_REGIONS_BED | proc_stdout
+  echo | proc_stdout
+
+  echo "Make whitelist with Mt regions bed file ${WHITELIST_WITH_MT_REGIONS_BED}..."  | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  cat $CHROMOSOME_WITH_MT_SIZES_ATAC_FILE \
+  | awk 'BEGIN{OFS="\t"}{ print $1,"1",$2;}' > $WHITELIST_WITH_MT_REGIONS_BED
+
+  echo "CHECKPOINT" | proc_stdout
+  echo "Contents of file ${WHITELIST_WITH_MT_REGIONS_BED}..." | proc_stdout
+  cat $WHITELIST_WITH_MT_REGIONS_BED | proc_stdout
   echo | proc_stdout
 
   echo | proc_stdout
@@ -219,7 +236,7 @@ function make_gene_bodies_file()
     | uniq \
     | gzip > ${GENE_BODIES_BED}.gz
   
-  ${BEDTOOLS} slop -i ${GENE_BODIES_BED}.gz -s -l 2000 -r 0 -g $CHROMOSOME_SIZES_FILE \
+  ${BEDTOOLS} slop -i ${GENE_BODIES_BED}.gz -s -l 2000 -r 0 -g $CHROMOSOME_SIZES_ATAC_FILE \
     | sort -k1,1V -k2,2n -k3,3n \
     | gzip > ${GENE_BODIES_PLUS_UPSTREAM_BED}.gz
   echo | proc_stdout

@@ -34,8 +34,10 @@ INDEX_PREFIX="$ORGANISM"
 #
 # Files.
 #
-CHROMOSOME_SIZES_FILE="chromosome_sizes.txt"
+CHROMOSOME_SIZES_ATAC_FILE="chromosome_sizes_atac.txt"
+CHROMOSOME_WITH_MT_SIZES_ATAC_FILE="chromosome_with_mt_sizes_atac.txt"
 WHITELIST_REGIONS_BED="whitelist_regions.bed"
+WHITELIST_WITH_MT_REGIONS_BED="whitelist_with_mt_regions.bed"
 TSS_BED="tss.bed"
 TSS_FOUND_BIOTYPES_FILE="tss.found_biotypes.lst"
 TSS_SELECT_BIOTYPES_FILE="tss.select_biotypes.lst"
