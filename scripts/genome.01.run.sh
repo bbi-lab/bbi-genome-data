@@ -39,8 +39,10 @@ source ${SCRIPT_DIR}/genome.04.make_genome_files.sh
 source ${SCRIPT_DIR}/genome.05.get_gtf_file.sh
 
 echo "The genome output files will be written to"
-echo "  ${STAGE_DIR}"
-echo -n "Is this correct (y/[n])?"
+echo
+echo "  ${STAGE_DIR}/${ORGANISM_NAME}"
+echo
+echo -n "Is this correct (y/[n])? "
 read query
 if [ "${query}" != "y" ]
 then
@@ -48,9 +50,21 @@ then
 fi
 echo
 
+echo "================================================================================"
+echo
 echo "Downloading genome files from"
+echo
 echo "  ${ENSEMBL_DNA_URL}"
 echo "  ${ENSEMBL_GTF_URL}"
+echo
+echo -n "Is this correct (y/[n])? "
+read query
+if [ "${query}" != "y" ]
+then
+  exit 0
+fi
+echo
+echo "================================================================================"
 echo
 
 source ${SCRIPT_DIR}/genome.10.make_clean_directory.sh

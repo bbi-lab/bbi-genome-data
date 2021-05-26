@@ -39,8 +39,10 @@ source ${SCRIPT_DIR}/atac.04.make_aligner_index.sh
 source ${SCRIPT_DIR}/atac.05.misc.sh
 
 echo "The ATAC-seq output files will be written to"
-echo "  ${STAGE_DIR}"
-echo -n "Is this correct (y/[n])?"
+echo
+echo "  ${STAGE_DIR}/${ORGANISM_NAME}"
+echo
+echo -n "Is this correct (y/[n])? "
 read query
 if [ "${query}" != "y" ]
 then

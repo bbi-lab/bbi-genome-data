@@ -38,8 +38,10 @@ source ${SCRIPT_DIR}/rna.03.make_bed_files.sh
 source ${SCRIPT_DIR}/rna.04.make_aligner_index.sh
 
 echo "The RNA-seq output files will be written to"
-echo "  ${STAGE_DIR}"
-echo -n "Is this correct (y/[n])?"
+echo
+echo "  ${STAGE_DIR}/${ORGANISM_NAME}"
+echo
+echo -n "Is this correct (y/[n])? "
 read query
 if [ "${query}" != "y" ]
 then
