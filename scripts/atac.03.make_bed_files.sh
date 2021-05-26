@@ -81,6 +81,13 @@ function make_whitelist_regions_file()
 
 function make_tss_file()
 {
+  if [ "${SELECT_GENE_BIOTYPES}" == "" ]
+  then
+    echo "Error: SELECT_GENE_BIOTYPES variable is not set"
+    echo "       Edit genome.<organism>.txt"
+    exit -1
+  fi
+
   echo "Make TSS bed file ${TSS_BED}.gz..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 

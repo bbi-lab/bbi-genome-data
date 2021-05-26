@@ -37,8 +37,17 @@ source ${SCRIPT_DIR}/rna.02.definitions.sh
 source ${SCRIPT_DIR}/rna.03.make_bed_files.sh
 source ${SCRIPT_DIR}/rna.04.make_aligner_index.sh
 
-source ${SCRIPT_DIR}/rna.10.make_clean_directory.sh
+echo "The RNA-seq output files will be written to"
+echo "  ${STAGE_DIR}"
+echo -n "Is this correct (y/[n])?"
+read query
+if [ "${query}" != "y" ]
+then
+  exit 0
+fi
+echo
 
+source ${SCRIPT_DIR}/rna.10.make_clean_directory.sh
 
 #
 # Make bed files in directory <organism>.

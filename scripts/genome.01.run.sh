@@ -37,8 +37,23 @@ source ${SCRIPT_DIR}/genome.02.definitions.sh
 source ${SCRIPT_DIR}/genome.03.get_fasta_file.sh
 source ${SCRIPT_DIR}/genome.04.make_genome_files.sh
 source ${SCRIPT_DIR}/genome.05.get_gtf_file.sh
-source ${SCRIPT_DIR}/genome.10.make_clean_directory.sh
 
+echo "The genome output files will be written to"
+echo "  ${STAGE_DIR}"
+echo -n "Is this correct (y/[n])?"
+read query
+if [ "${query}" != "y" ]
+then
+  exit 0
+fi
+echo
+
+echo "Downloading genome files from"
+echo "  ${ENSEMBL_DNA_URL}"
+echo "  ${ENSEMBL_GTF_URL}"
+echo
+
+source ${SCRIPT_DIR}/genome.10.make_clean_directory.sh
 
 mkdir -p $GENOME_DIR
 

@@ -33,12 +33,19 @@ function sequences_to_keep_ref()
 # Choose aligner subject sequences named in the environment variable SEQUENCES_TO_KEEP_ALIGNER...
 # Notes:
 #   o  select sequences named in the variable SEQUENCES_TO_KEEP_ALIGNER, which
-#      must be defined appropriately in the files 'genome.<organims>.sh'.
+#      must be set appropriately in the files 'genome.<organims>.sh'.
 #   o  use either sequences_to_keep_ref() or sequences_to_keep_named() to
 #      make the file $FINAL_IDS_FILE but not both.
 #
 function sequences_to_keep_named()
 {
+  if [ "${SEQUENCES_TO_KEEP_ALIGNER}" == "" ]
+  then
+    echo "Error: SEQUENCES_TO_KEEP_ALIGNER variable is not set"
+    echo "       Edit genome.<organism>.txt"
+    exit -1
+  fi
+
   echo "Keep the named sequences for read alignments in ${FASTA}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   echo "Sequences kept from fasta: ${SEQUENCES_TO_KEEP_ALIGNER}" | proc_stdout ${RECORD} fasta_seqs_kept
@@ -165,6 +172,20 @@ function compress_finish_fasta_file()
 #
 function make_chromosome_sizes_files()
 {
+  if [ "${SEQUENCES_TO_KEEP_ATAC_ANALYSIS}" == "" ]
+  then
+    echo "Error: SEQUENCES_TO_KEEP_ATAC_ANALYSIS variable is not set"
+    echo "       Edit genome.<organism>.txt"
+    exit -1
+  fi
+
+  if [ "${SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS}" == "" ]
+  then
+    echo "Error: SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS variable is not set"
+    echo "       Edit genome.<organism>.txt"
+    exit -1
+  fi
+
   echo "samtools version: " | proc_stdout
   ${SAMTOOLS} --version | proc_stdout
   echo | proc_stdout

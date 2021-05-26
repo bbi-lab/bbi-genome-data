@@ -38,8 +38,17 @@ source ${SCRIPT_DIR}/atac.03.make_bed_files.sh
 source ${SCRIPT_DIR}/atac.04.make_aligner_index.sh
 source ${SCRIPT_DIR}/atac.05.misc.sh
 
-source ${SCRIPT_DIR}/atac.10.make_clean_directory.sh
+echo "The ATAC-seq output files will be written to"
+echo "  ${STAGE_DIR}"
+echo -n "Is this correct (y/[n])?"
+read query
+if [ "${query}" != "y" ]
+then
+  exit 0
+fi
+echo
 
+source ${SCRIPT_DIR}/atac.10.make_clean_directory.sh
 
 mkdir -p $ATAC_DIR
 
