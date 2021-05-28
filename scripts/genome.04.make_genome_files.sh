@@ -190,24 +190,24 @@ function make_chromosome_sizes_files()
   ${SAMTOOLS} --version | proc_stdout
   echo | proc_stdout
 
-  echo "Make chromosome sizes file ${CHROMOSOME_SIZES_FILE}..." | proc_stdout
+  echo "Make chromosome sizes file ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
-  ${SAMTOOLS} faidx $FASTA_FILTERED
-  cat $FASTA_FILTERED.fai | awk '{printf( "%s\t%s\n",$1,$2); }' > $CHROMOSOME_SIZES_FILE
+  ${SAMTOOLS} faidx $FASTA_FINISHED
+  cat $FASTA_FINISHED.fai | awk '{printf( "%s\t%s\n",$1,$2); }' > $CHROMOSOME_SIZES_FASTA_FINISHED_FILE
   echo | proc_stdout
 
   echo "CHECKPOINT" | proc_stdout
-  cat $CHROMOSOME_SIZES_FILE | proc_stdout
+  cat $CHROMOSOME_SIZES_FASTA_FINISHED_FILE | proc_stdout
   echo | proc_stdout 
- 
+
   echo "Make sci-ATAC chromosome sizes file ${CHROMOSOME_SIZES_ATAC_FILE}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
-  ${SAMTOOLS} faidx $FASTA_FILTERED
+  ${SAMTOOLS} faidx $FASTA_FINISHED
   REXP=`echo "$SEQUENCES_TO_KEEP_ATAC_ANALYSIS" \
     | sed 's/[ ][ ]*/|/g' \
     | sed 's/^/(/' \
     | sed 's/$/)/'`
-  cat $FASTA_FILTERED.fai | awk '{if($1~/^'$REXP'$/) { printf( "%s\t%s\n",$1,$2); } }' > $CHROMOSOME_SIZES_ATAC_FILE
+  cat $FASTA_FINISHED.fai | awk '{if($1~/^'$REXP'$/) { printf( "%s\t%s\n",$1,$2); } }' > $CHROMOSOME_SIZES_ATAC_FILE
   echo | proc_stdout
  
   echo "CHECKPOINT" | proc_stdout
@@ -216,12 +216,12 @@ function make_chromosome_sizes_files()
 
   echo "Make sci-ATAC chromosome with Mt sizes file ${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
-  ${SAMTOOLS} faidx $FASTA_FILTERED
+  ${SAMTOOLS} faidx $FASTA_FINISHED
   REXP=`echo "$SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS" \
     | sed 's/[ ][ ]*/|/g' \
     | sed 's/^/(/' \
     | sed 's/$/)/'`
-  cat $FASTA_FILTERED.fai | awk '{if($1~/^'$REXP'$/) { printf( "%s\t%s\n",$1,$2); } }' > $CHROMOSOME_WITH_MT_SIZES_ATAC_FILE
+  cat $FASTA_FINISHED.fai | awk '{if($1~/^'$REXP'$/) { printf( "%s\t%s\n",$1,$2); } }' > $CHROMOSOME_WITH_MT_SIZES_ATAC_FILE
   echo | proc_stdout
 
   echo "CHECKPOINT" | proc_stdout

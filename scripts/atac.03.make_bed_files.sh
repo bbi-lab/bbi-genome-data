@@ -6,6 +6,12 @@ function setup_source_files()
   echo "Make copies of and soft links to required files from ${GENOME_DIR}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
+  if [ ! -f "${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}" ]
+  then
+    echo "ERROR: cannot find file ${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}. Exiting..." | proc_stdout
+    exit -1
+  fi
+
   if [ ! -f "${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE}" ]
   then
     echo "ERROR: cannot find file ${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE}. Exiting..." | proc_stdout
@@ -30,6 +36,7 @@ function setup_source_files()
     exit -1
   fi
 
+  cp ${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE} .
   cp ${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE} .
   cp ${GENOME_DIR}/${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} .
 

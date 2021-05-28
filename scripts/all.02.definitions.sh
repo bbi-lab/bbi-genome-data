@@ -8,8 +8,8 @@
 #
 # Staging directory.
 #
-STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
-# STAGE_DIR="/net/bbi/vol1/data/bge/genomes/genomes_stage.test.20210526"
+# STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
+STAGE_DIR="/net/bbi/vol1/data/bge/genomes/genomes_stage.test.20210527"
 
 
 #
@@ -32,7 +32,7 @@ ATAC_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_atac"
 FASTA=`echo $FASTA_GZ | sed 's/\.gz$//'`
 FASTA_FILTERED="${FASTA}.filtered"
 FASTA_FINISHED="${FASTA}.finished"
-CHROMOSOME_SIZES_FILE="chromosome_sizes.txt"
+CHROMOSOME_SIZES_FASTA_FINISHED_FILE="chromosome_sizes_fasta_finished.txt"
 CHROMOSOME_SIZES_ATAC_FILE="chromosome_sizes_atac.txt"
 CHROMOSOME_WITH_MT_SIZES_ATAC_FILE="chromosome_with_mt_sizes_atac.txt"
 GTF=`echo $GTF_GZ | sed 's/\.gz$//'`

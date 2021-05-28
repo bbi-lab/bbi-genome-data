@@ -11,6 +11,6 @@
 #
 # Organism definition file directory.
 #
-ORGANISM_FILE_DIR="/net/bbi/vol1/data/scripts/bbi-genome-data/organisms"
-# ORGANISM_FILE_DIR="/net/gs/vol1/home/bge/git/bbi-genome-data/organisms"
+# ORGANISM_FILE_DIR="/net/bbi/vol1/data/scripts/bbi-genome-data/organisms"
+ORGANISM_FILE_DIR="/net/gs/vol1/home/bge/git/bbi-genome-data/organisms"
 

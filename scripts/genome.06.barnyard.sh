@@ -9,10 +9,12 @@ function barnyard_setup_source_files()
 
   HUMAN_FASTA_FINISHED="human.fa.finished"
   HUMAN_GTF="human.gtf"
+  HUMAN_CHROMOSOME_SIZES_FASTA_FINISHED_FILE="human.chromosome_sizes_fasta_finished.txt"
   HUMAN_CHROMOSOME_SIZES_ATAC_FILE="human.chromosome_sizes_atac.txt"
   HUMAN_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE="human.chromosome_with_mt_sizes_atac.txt"
   MOUSE_FASTA_FINISHED="mouse.fa.finished"
   MOUSE_GTF="mouse.gtf"
+  MOUSE_CHROMOSOME_SIZES_FASTA_FINISHED_FILE="mouse.chromosome_sizes_fasta_finished.txt"
   MOUSE_CHROMOSOME_SIZES_ATAC_FILE="mouse.chromosome_sizes_atac.txt"
   MOUSE_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE="mouse.chromosome_with_mt_sizes_atac.txt"
 
@@ -32,6 +34,12 @@ function barnyard_setup_source_files()
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_GTF_GZ=${GENOME_DIR}/${GTF_GZ}
   zcat $SRC_GTF_GZ | grep -v '^#' | sed 's/^/HUMAN_/' > $HUMAN_GTF
+  echo | proc_stdout
+
+  echo "Edit human ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE} into ${HUMAN_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  SRC_CHROMOSOME_SIZES_FASTA_FINISHED_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}
+  sed 's/^/HUMAN_/' $SRC_CHROMOSOME_SIZES_FASTA_FINISHED_FILE > $HUMAN_CHROMOSOME_SIZES_FASTA_FINISHED_FILE
   echo | proc_stdout
 
   echo "Edit human ${CHROMOSOME_SIZES_ATAC_FILE} into ${HUMAN_CHROMOSOME_SIZES_ATAC_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
@@ -65,6 +73,12 @@ function barnyard_setup_source_files()
   zcat $SRC_GTF_GZ | grep -v '^#' | sed 's/^/MOUSE_/' > $MOUSE_GTF
   echo | proc_stdout
 
+  echo "Edit mouse ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE} into ${MOUSE_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  SRC_CHROMOSOME_SIZES_FASTA_FINISHED_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}
+  sed 's/^/MOUSE_/' $SRC_CHROMOSOME_SIZES_FASTA_FINISHED_FILE > $MOUSE_CHROMOSOME_SIZES_FASTA_FINISHED_FILE
+  echo | proc_stdout
+
   echo "Edit mouse ${CHROMOSOME_SIZES_ATAC_FILE} into ${MOUSE_CHROMOSOME_SIZES_ATAC_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_SIZES_ATAC_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE}
@@ -92,6 +106,10 @@ function barnyard_setup_source_files()
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   cat ${HUMAN_GTF} ${MOUSE_GTF} | gzip > ${BARNYARD_GTF_GZ}
   echo | proc_stdout
+
+  echo "Concatenate ${HUMAN_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} ${MOUSE_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} into ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  cat ${HUMAN_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} ${MOUSE_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} > ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}
 
   echo "Concatenate ${HUMAN_CHROMOSOME_SIZES_ATAC_FILE} ${MOUSE_CHROMOSOME_SIZES_ATAC_FILE} into ${CHROMOSOME_SIZES_ATAC_FILE}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout

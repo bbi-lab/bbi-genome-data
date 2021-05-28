@@ -34,6 +34,7 @@ INDEX_PREFIX="$ORGANISM"
 #
 # Files.
 #
+CHROMOSOME_SIZES_FASTA_FINISHED_FILE="chromosome_sizes_fasta_finished.txt"
 CHROMOSOME_SIZES_ATAC_FILE="chromosome_sizes_atac.txt"
 CHROMOSOME_WITH_MT_SIZES_ATAC_FILE="chromosome_with_mt_sizes_atac.txt"
 WHITELIST_REGIONS_BED="whitelist_regions.bed"
