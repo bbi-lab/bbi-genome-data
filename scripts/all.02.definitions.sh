@@ -8,8 +8,8 @@
 #
 # Staging directory.
 #
-# STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
-STAGE_DIR="/net/bbi/vol1/data/bge/genomes/genomes_stage.test.20210527"
+STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
+# STAGE_DIR="/net/bbi/vol1/data/bge/genomes/genomes_stage.test.20210528"
 
 
 #
