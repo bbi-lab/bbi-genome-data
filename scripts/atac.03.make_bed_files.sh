@@ -44,13 +44,13 @@ function setup_source_files()
   then
     rm "./${FASTA_FINISHED}"
   fi
-  ln -s ${GENOME_DIR}/${FASTA_FINISHED} .
+  ln -s ../${ORGANISM}_gsrc/${FASTA_FINISHED} .
 
   if [ -L "./${GTF_GZ}" ]
   then
     rm "./${GTF_GZ}"
   fi
-  ln -s ${GENOME_DIR}/${GTF_GZ} .
+  ln -s ../${ORGANISM}_gsrc/${GTF_GZ} .
 
   echo | proc_stdout
   echo 'Done.' | proc_stdout

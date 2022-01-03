@@ -15,7 +15,7 @@ function setup_source_files_bed()
   then
     rm "./${GTF_GZ}"
   fi
-  ln -s ${GENOME_DIR}/${GTF_GZ} .
+  ln -s "../${GENOME_SRC}/${GTF_GZ}" .
 
   echo | proc_stdout
   echo 'Done.' | proc_stdout
