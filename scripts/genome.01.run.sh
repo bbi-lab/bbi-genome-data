@@ -73,6 +73,8 @@ mkdir -p $GENOME_DIR
 
 pushd $GENOME_DIR
 
+echo "${BBI_GENOME_DATA_VERSION}" | proc_stdout ${RECORD} "bbi-genome-data scripts version"
+
 get_fasta_file
 get_fasta_info
 sequences_to_keep_ref
