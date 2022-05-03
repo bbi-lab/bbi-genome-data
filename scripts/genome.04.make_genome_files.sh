@@ -198,7 +198,7 @@ function make_chromosome_sizes_files()
 
   echo "CHECKPOINT" | proc_stdout
   cat $CHROMOSOME_SIZES_FASTA_FINISHED_FILE | proc_stdout
-  echo | proc_stdout 
+  echo | proc_stdout
 
   echo "Make sci-ATAC chromosome sizes file ${CHROMOSOME_SIZES_ATAC_FILE}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
@@ -211,8 +211,9 @@ function make_chromosome_sizes_files()
   echo | proc_stdout
  
   echo "CHECKPOINT" | proc_stdout
-  cat $CHROMOSOME_SIZES_ATAC_FILE | proc_stdout
-  echo | proc_stdout
+  echo "Contents of chromosome sizes file ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}." | proc_stdout $RECORD
+  cat $CHROMOSOME_SIZES_ATAC_FILE | proc_stdout $RECORD
+  echo | proc_stdout $RECORD
 
   echo "Make sci-ATAC chromosome with Mt sizes file ${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
@@ -225,8 +226,9 @@ function make_chromosome_sizes_files()
   echo | proc_stdout
 
   echo "CHECKPOINT" | proc_stdout
-  cat $CHROMOSOME_WITH_MT_SIZES_ATAC_FILE | proc_stdout
-  echo | proc_stdout
+  echo "Contents of chromosome sizes with Mt file ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}." | proc_stdout $RECORD
+  cat $CHROMOSOME_WITH_MT_SIZES_ATAC_FILE | proc_stdout $RECORD
+  echo | proc_stdout $RECORD
 
   echo 'Done.' | proc_stdout
   echo | proc_stdout
