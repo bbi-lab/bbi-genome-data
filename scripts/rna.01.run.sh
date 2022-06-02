@@ -58,6 +58,8 @@ mkdir -p $RNA_DIR
 
 pushd $RNA_DIR
 
+echo "${BBI_GENOME_DATA_VERSION}" | proc_stdout ${RECORD} "bbi-genome-data scripts version"
+
 setup_source_files_bed
 get_gene_annotations
 get_transcript_annotations

@@ -9,6 +9,12 @@
 
 
 #
+# bbi-genome-data script version.
+#
+BBI_GENOME_DATA_VERSION="1.0.0"
+
+
+#
 # Organism definition file directory.
 #
 ORGANISM_FILE_DIR="/net/bbi/vol1/data/scripts/bbi-genome-data/organisms"

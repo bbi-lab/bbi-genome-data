@@ -44,13 +44,13 @@ function setup_source_files()
   then
     rm "./${FASTA_FINISHED}"
   fi
-  ln -s ${GENOME_DIR}/${FASTA_FINISHED} .
+  ln -s ../${ORGANISM}_gsrc/${FASTA_FINISHED} .
 
   if [ -L "./${GTF_GZ}" ]
   then
     rm "./${GTF_GZ}"
   fi
-  ln -s ${GENOME_DIR}/${GTF_GZ} .
+  ln -s ../${ORGANISM}_gsrc/${GTF_GZ} .
 
   echo | proc_stdout
   echo 'Done.' | proc_stdout
@@ -95,7 +95,8 @@ function make_tss_file()
     exit -1
   fi
 
-  echo "Make TSS bed file ${TSS_BED}.gz..." | proc_stdout
+  echo "==== Make TSS bed file ${TSS_BED}.gz... ====" | proc_stdout $RECORD
+
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
   echo "bedtools version: " | proc_stdout ${RECORD}
@@ -116,7 +117,6 @@ function make_tss_file()
     | awk '{printf( "%s\t%s\n", $1, $2 );}' > $TSS_FOUND_BIOTYPES_FILE
   cat $TSS_FOUND_BIOTYPES_FILE | proc_stdout
   echo | proc_stdout
-
 
   echo "Expected gene_biotype entries in ${TSS_BED}.temp..."  | proc_stdout
   echo $SELECT_GENE_BIOTYPES \
@@ -146,6 +146,40 @@ function make_tss_file()
   echo 'Done.' | proc_stdout
   echo | proc_stdout
 
+  #
+  # Log the counts of TSS biotype entries.
+  #
+  echo "Count TSS biotypes selected in ${TSS_BED}.temp." | proc_stdout $RECORD
+  cat ${TSS_BED}.temp \
+  | grep -i -E "${SELECT_GENE_BIOTYPES}" \
+  | awk '{print$9}' \
+  | sort \
+  | uniq -c > $TSS_SELECTED_BIOTYPE_COUNTS
+  cat $TSS_SELECTED_BIOTYPE_COUNTS | proc_stdout $RECORD
+  echo | proc_stdout
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout $RECORD
+
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count entries ${TSS_BED}.gz..." | proc_stdout
+  zcat ${TSS_BED}.gz \
+    | wc -l \
+    | proc_stdout
+  echo | proc_stdout
+
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count entries by sequence name in ${TSS_BED}.gz..." | proc_stdout $RECORD
+  zcat ${TSS_BED}.gz \
+    | awk '{print$1}' \
+    | sort \
+    | uniq -c \
+    | sort -k 2,2V \
+    | awk '{printf( "%s\t%s\n", $1, $2 );}' | proc_stdout $RECORD
+  echo | proc_stdout $RECORD
+
+
+  echo "==== Make TSS gene map file ${TSS_GENE_MAP}.gz... ====" | proc_stdout $RECORD
+
   echo "Make TSS gene map file ${TSS_GENE_MAP}..."
   cat tss.bed.temp \
   | grep -i -E "${SELECT_GENE_BIOTYPES}" \
@@ -158,22 +192,15 @@ function make_tss_file()
   echo 'Done.' | proc_stdout
   echo | proc_stdout
 
-
   echo "CHECKPOINT" | proc_stdout
-  echo "Count entries ${TSS_BED}.gz..." | proc_stdout
-  zcat ${TSS_BED}.gz \
-    | wc -l | proc_stdout
-  echo | proc_stdout
-
-  echo "CHECKPOINT" | proc_stdout
-  echo "Count entries by sequence name in ${TSS_BED}.gz..." | proc_stdout
-  zcat ${TSS_BED}.gz \
-    | awk '{print$1}' \
+  echo "Count entries by biotype in ${TSS_GENE_MAP}..." | proc_stdout $RECORD
+  cat ${TSS_GENE_MAP} \
+    | awk '{print$3}' \
     | sort \
     | uniq -c \
     | sort -k 2,2V \
-    | awk '{printf( "%s\t%s\n", $1, $2 );}' | proc_stdout
-  echo | proc_stdout
+    | awk '{printf( "%s\t%s\n", $1, $2 );}' | proc_stdout $RECORD
+  echo | proc_stdout $RECORD
 
   echo | proc_stdout
   echo 'Done.' | proc_stdout
@@ -238,10 +265,17 @@ function make_gene_bodies_file()
   echo | proc_stdout
 
 
+  echo "==== Make gene bodies file ${GENE_BODIES_BED}.gz... ====" | proc_stdout $RECORD
+  echo "==== Make gene bodies file ${GENE_BODIES_PLUS_UPSTREAM_BED}.gz... ====" | proc_stdout $RECORD
+
   #
   # Here we make the ${GENE_BODIES_BED}.gz and ${GENE_BODIES_PLUS_UPSTREAM_BED}.gz files.
   #
-  echo "Filter gene bodies bed file ${GENE_BODIES_BED}.temp entries..." | proc_stdout
+  GENE_BODIES_UPSTREAM_EXTENSION="2000"
+  GENE_BODIES_DOWNSTREAM_EXTENSION="0"
+  echo "Filter gene bodies bed file ${GENE_BODIES_BED}.temp entries..." | proc_stdout $RECORD
+  echo "Gene bodies upstream extension is $GENE_BODIES_UPSTREAM_EXTENSION bases." | proc_stdout $RECORD
+  echo "Gene bodies downstream extension is $GENE_BODIES_DOWNSTREAM_EXTENSION bases." | proc_stdout $RECORD
   cat ${GENE_BODIES_BED}.temp \
     | grep -i -E "${SELECT_GENE_BIOTYPES}" \
     | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,1,$6}' \
@@ -250,12 +284,46 @@ function make_gene_bodies_file()
     | uniq \
     | gzip > ${GENE_BODIES_BED}.gz
   
-  ${BEDTOOLS} slop -i ${GENE_BODIES_BED}.gz -s -l 2000 -r 0 -g $CHROMOSOME_SIZES_ATAC_FILE \
+
+  ${BEDTOOLS} slop -i ${GENE_BODIES_BED}.gz -s -l $GENE_BODIES_UPSTREAM_EXTENSION -r $GENE_BODIES_DOWNSTREAM_EXTENSION -g $CHROMOSOME_SIZES_ATAC_FILE \
     | sort -k1,1V -k2,2n -k3,3n \
     | gzip > ${GENE_BODIES_PLUS_UPSTREAM_BED}.gz
   echo | proc_stdout
   echo 'Done.' | proc_stdout
   echo | proc_stdout
+
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count entries in ${GENE_BODIES_BED}.gz..." | proc_stdout
+  zcat ${GENE_BODIES_BED}.gz \
+    | wc -l | proc_stdout
+  echo | proc_stdout | tee -a ${LOG}
+
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count entries by sequence name in ${GENE_BODIES_BED}.gz..." | proc_stdout $RECORD
+  zcat ${GENE_BODIES_BED}.gz \
+    | awk '{print$1}' \
+    | sort \
+    | uniq -c \
+    | sort -k 2,2V \
+    | awk '{printf( "%s\t%s\n", $1, $2 );}' | proc_stdout $RECORD
+  echo | proc_stdout | tee -a ${LOG}
+
+  #
+  # Log the counts of gene bodies biotype entries.
+  #
+  echo "Count gene bodies biotypes selected in ${GENE_BODIES_PLUS_UPSTREAM_BED}.gz." | proc_stdout $RECORD
+  cat ${TSS_BED}.temp \
+  | grep -i -E "${SELECT_GENE_BIOTYPES}" \
+  | awk '{print$9}' \
+  | sort \
+  | uniq -c > $GENE_BODIES_SELECTED_BIOTYPE_COUNTS
+  cat $GENE_BODIES_SELECTED_BIOTYPE_COUNTS | proc_stdout $RECORD
+  echo | proc_stdout $RECORD
+  echo 'Done.' | proc_stdout $RECORD
+  echo | proc_stdout $RECORD
+
+
+  echo "==== Make gene bodies map file ${GENE_BODIES_GENE_MAP}.gz... ====" | proc_stdout $RECORD
 
   echo "Make gene bodies gene map file ${GENE_BODIES_GENE_MAP}..."
   cat ${GENE_BODIES_BED}.temp \
@@ -270,22 +338,16 @@ function make_gene_bodies_file()
 
 
   echo "CHECKPOINT" | proc_stdout
-  echo "Count entries in ${GENE_BODIES_BED}.gz..." | proc_stdout
-  zcat ${GENE_BODIES_BED}.gz \
-    | wc -l | proc_stdout
-  echo | proc_stdout | tee -a ${LOG}
-
-  echo "CHECKPOINT" | proc_stdout
-  echo "Count entries by sequence name in ${GENE_BODIES_BED}.gz..." | proc_stdout
-  zcat ${GENE_BODIES_BED}.gz \
-    | awk '{print$1}' \
+  echo "Count entries by biotype in ${GENE_BODIES_GENE_MAP}..." | proc_stdout $RECORD
+  cat ${GENE_BODIES_GENE_MAP} \
+    | awk '{print$3}' \
     | sort \
     | uniq -c \
     | sort -k 2,2V \
-    | awk '{printf( "%s\t%s\n", $1, $2 );}' | proc_stdout
+    | awk '{printf( "%s\t%s\n", $1, $2 );}' | proc_stdout $RECORD
   echo | proc_stdout | tee -a ${LOG}
 
-  echo | proc_stdout
+  echo | proc_stdout $RECORD
   echo 'Done.' | proc_stdout
   echo | proc_stdout
 }

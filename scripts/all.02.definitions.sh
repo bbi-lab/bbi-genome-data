@@ -9,19 +9,53 @@
 # Staging directory.
 #
 STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
-# STAGE_DIR="/net/bbi/vol1/data/bge/genomes/genomes_stage.test.20210528"
+# STAGE_DIR="/net/bbi/vol1/data/bge/genomes/genomes_stage.test.20220426a"
 
 
 #
 # Output directories.
 #   variable       description
 #   --------       -----------
+#   GENOME_SRC     initial genome files
 #   GENOME_DIR     genome source directory
 #   RNA_DIR        sci-RNA-seq files
 #   STAR_DIR       STAR aligner index files
 #   ATAC_DIR       sci-ATAC-seq files
 #
-GENOME_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_gsrc"
+# Notes:
+#   o  the GENOME_DIR environment variable must be
+#      set to an absolute path when running the
+#      genome.01.run.sh, genome.01.run_barnyard.sh,
+#      rna.01.run.sh, and atac.01.run.sh scripts.
+#      For simplicity, run all of these scripts
+#      one-after-another without moving the parent
+#      directory, that is, the directory given in
+#      the STAGE_DIR environment variable.
+#   o  the scripts that make the rna, star, and atac
+#      directories and files make relative symbolic links
+#      to the ${ORGANISM}_gsrc directories. Therefore the
+#      directory structure for the organism must be
+#        ${GROUP} contains
+#          ${ORGANISM}_gsrc
+#          ${ORGANISM}_rna
+#          ${ORGANISM}_star
+#          ${ORGANISM}_atac
+#      The relative links allow one to move the
+#      directories after they are made without remaking
+#      the symbolic links for certain files in the
+#      rna, star, and atac directories.
+#   o  the ${GROUP} and ${ORGANISM} environment variables
+#      are set in the organism file. Typical organism
+#      files are in the bbi-genome-data/organisms
+#      directory.
+#   o  the ${GROUP} environment variable typically is
+#      the same as ${ORGANISM} but can differ, for
+#      example when there are different genome versions
+#      for an organism.
+#      
+#      
+GENOME_SRC="${ORGANISM}_gsrc"
+GENOME_DIR="${STAGE_DIR}/${GROUP}/${GENOME_SRC}"
 RNA_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_rna"
 STAR_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_star"
 ATAC_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_atac"

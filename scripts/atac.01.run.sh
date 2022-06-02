@@ -56,6 +56,8 @@ mkdir -p $ATAC_DIR
 
 pushd $ATAC_DIR
 
+echo "${BBI_GENOME_DATA_VERSION}" | proc_stdout ${RECORD} "bbi-genome-data scripts version"
+
 setup_source_files
 make_whitelist_regions_file
 make_tss_file

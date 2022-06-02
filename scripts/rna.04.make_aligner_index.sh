@@ -17,8 +17,8 @@ function setup_source_files_star()
     exit -1
   fi
 
-  ln -s ${GENOME_DIR}/${FASTA_FINISHED} .
-  ln -s ${GENOME_DIR}/${GTF_GZ} .
+  ln -s "../${GENOME_SRC}/${FASTA_FINISHED}" .
+  ln -s "../${GENOME_SRC}/${GTF_GZ}" .
 
   echo | proc_stdout
   echo 'Done.' | proc_stdout
