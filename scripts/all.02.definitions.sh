@@ -9,7 +9,8 @@
 # Staging directory.
 #
 STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
-# STAGE_DIR="/net/bbi/vol1/data/bge/genomes/genomes_stage.test.20220426a"
+# bge
+# STAGE_DIR="/net/bbi/vol1/data/bge/genomes/genomes_stage.test.20220714a"
 
 
 #
@@ -61,6 +62,26 @@ STAR_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_star"
 ATAC_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_atac"
 
 #
+# Fix for Gencode-related modifications.
+#
+GENOME_SOURCE=${GENOME_SOURCE:-"ensembl"}
+SOURCE_DNA_URL=${SOURCE_DNA_URL:-${ENSEMBL_DNA_URL}}
+SOURCE_GTF_URL=${SOURCE_GTF_URL:-${ENSEMBL_GTF_URL}}
+
+if [ "${GENOME_SOURCE}" == "ensembl" ]; then
+  GENE_BIOTYPE="gene_biotype"
+  MITO_NAME="MT"
+  CHECKSUM_PROGRAM="sum"
+elif [ "${GENOME_SOURCE}" == "gencode" ]; then
+  GENE_BIOTYPE="gene_type"
+  MITO_NAME="M"
+  CHECKSUM_PROGRAM="md5sum"
+else
+  echo "Error: unknown GENOME_SOURCE"
+  exit -1
+fi
+
+#
 # Common file names.
 #
 FASTA=`echo $FASTA_GZ | sed 's/\.gz$//'`
@@ -76,8 +97,16 @@ RECORD="record.out"
 #
 # Barnyard-specific file names.
 #
-BARNYARD_FASTA_FINISHED="barnyard.fa.finished"
-BARNYARD_GTF_GZ="barnyard.gtf.gz"
+if [ "${GENOME_SOURCE}" == "ensembl" ]; then
+  BARNYARD_FASTA_FINISHED="barnyard.fa.finished"
+  BARNYARD_GTF_GZ="barnyard.gtf.gz"
+elif [ "${GENOME_SOURCE}" == "gencode" ]; then
+  BARNYARD_FASTA_FINISHED="barnyard_gencode.fa.finished"
+  BARNYARD_GTF_GZ="barnyard_gencode.gtf.gz"
+else
+  echo "Error: unknown GENOME_SOURCE"
+  exit -1
+fi
 
 #
 # Log file tag for pulling key information from the log files.

@@ -8,8 +8,8 @@
 #      in which the fourth token is the sequence type.
 #   o  select all sequences in which the fourth token is 'REF', which
 #      we expect to be reference sequences.
-#   o  use either sequences_to_keep_ref() or sequences_to_keep_named() to
-#      make the file $FINAL_IDS_FILE but not both.
+#   o  use sequences_to_keep_ref(), sequences_to_keep_named(), or
+#      sequences_to_keep_all to make the file $FINAL_IDS_FILE.
 #
 function sequences_to_keep_ref()
 {
@@ -34,8 +34,8 @@ function sequences_to_keep_ref()
 # Notes:
 #   o  select sequences named in the variable SEQUENCES_TO_KEEP_ALIGNER, which
 #      must be set appropriately in the files 'genome.<organims>.sh'.
-#   o  use either sequences_to_keep_ref() or sequences_to_keep_named() to
-#      make the file $FINAL_IDS_FILE but not both.
+#   o  use sequences_to_keep_ref(), sequences_to_keep_named(), or
+#      sequences_to_keep_all to make the file $FINAL_IDS_FILE.
 #
 function sequences_to_keep_named()
 {
@@ -51,6 +51,32 @@ function sequences_to_keep_named()
   echo "Sequences kept from fasta: ${SEQUENCES_TO_KEEP_ALIGNER}" | proc_stdout ${RECORD} fasta_seqs_kept
   echo | proc_stdout
   echo "$SEQUENCES_TO_KEEP_ALIGNER" | sed 's/[ ][ ]*/\n/g' > $FINAL_IDS_FILE
+  echo | proc_stdout
+
+  echo "CHECKPOINT" | proc_stdout
+  cat $FINAL_IDS_FILE | proc_stdout
+  echo | proc_stdout
+
+  echo 'Done.' | proc_stdout
+  echo | proc_stdout
+}
+
+
+#
+# Keep all fasta sequences for the aligner.
+# Notes:
+#   o  select sequences named in the variable SEQUENCES_TO_KEEP_ALIGNER, which
+#      must be set appropriately in the files 'genome.<organims>.sh'.
+#   o  use either sequences_to_keep_ref() or sequences_to_keep_named() to
+#      make the file $FINAL_IDS_FILE but not both.
+#
+function sequences_to_keep_all()
+{
+  echo "Keep all genome sequences for read alignments in ${FASTA}..." | proc_stdout
+  date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
+  cat ${FASTA}.headers \
+    | awk '{print$1}' \
+    | sed 's/^>//' > $FINAL_IDS_FILE
   echo | proc_stdout
 
   echo "CHECKPOINT" | proc_stdout
@@ -139,6 +165,7 @@ function finish_fasta_file()
 
   echo "CHECKPOINT" | proc_stdout
   echo "Report different md5 checksums from the filtered and finished fasta files (there may be none)..." | proc_stdout ${RECORD}
+  echo "Masking pseudo-autosomal, paralogous, regions changes sequences."
   join -1 1 -2 1 ${FASTA_FILTERED}.md5_seq.sort ${FASTA_FINISHED}.md5_seq.sort \
     | sort -k1,1V \
     | awk '{printf( "%s\t%s\t%s\t%s\t%s\n", $1, $3, $5, $2, $4);}' \

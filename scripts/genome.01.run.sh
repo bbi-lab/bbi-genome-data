@@ -18,7 +18,7 @@ set -o nounset   # set -u : exit the script if you try to use an uninitialised v
 set -o errexit   # set -e : exit the script if any statement returns a non-true return value
 
 
-SCRIPT_DIR="."
+SCRIPT_DIR=`pwd`
 source ${SCRIPT_DIR}/all.00.definitions.sh
 
 
@@ -54,8 +54,8 @@ echo "==========================================================================
 echo
 echo "Downloading genome files from"
 echo
-echo "  ${ENSEMBL_DNA_URL}"
-echo "  ${ENSEMBL_GTF_URL}"
+echo "  ${SOURCE_DNA_URL}"
+echo "  ${SOURCE_GTF_URL}"
 echo
 echo -n "Is this correct (y/[n])? "
 read query
@@ -77,13 +77,26 @@ echo "${BBI_GENOME_DATA_VERSION}" | proc_stdout ${RECORD} "bbi-genome-data scrip
 
 get_fasta_file
 get_fasta_info
-sequences_to_keep_ref
+
+if [ "${GENOME_SOURCE}" == 'ensembl' ]
+then
+  sequences_to_keep_ref
+elif [ "${GENOME_SOURCE}" == 'gencode' ]
+then
+  sequences_to_keep_all
+fi
+
 filter_fasta_file
 finish_fasta_file
 compress_finish_fasta_file
 make_chromosome_sizes_files
 get_gtf_file
 get_gtf_info
+
+if [ "${GENOME_SOURCE}" == 'gencode' ]
+then
+  gencode_edit_gtf
+fi
 make_clean_directory
 
 popd

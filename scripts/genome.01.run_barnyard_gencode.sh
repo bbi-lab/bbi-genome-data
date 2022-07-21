@@ -27,8 +27,9 @@ fi
 
 source ${SCRIPT_DIR}/all.00.definitions.sh
 
+GENOME_SOURCE="gencode"
 
-ORGANISM_NAME="barnyard"
+ORGANISM_NAME="barnyard_gencode"
 
 ORGANISM_DEFINITION_FILE="${ORGANISM_FILE_DIR}/genome.${ORGANISM_NAME}.sh"
 if [ ! -f "$ORGANISM_DEFINITION_FILE" ]

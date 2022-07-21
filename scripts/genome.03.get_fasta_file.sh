@@ -13,28 +13,28 @@ function get_fasta_file
     echo "Download and uncompress fasta file ${FASTA_GZ}..." | proc_stdout
     date '+%Y.%m.%d:%H.%M.%S' | proc_stdout ${RECORD} fasta_download_date
 
-    echo "URL is ${ENSEMBL_DNA_URL}" | proc_stdout
+    echo "URL is ${SOURCE_DNA_URL}" | proc_stdout
     echo "Fasta filename is $FASTA_GZ" | proc_stdout
 
     echo "Download fasta file..." | proc_stdout
-    echo "Genome fasta file URL: ${ENSEMBL_DNA_URL}/$FASTA_GZ" | proc_stdout ${RECORD} fasta_url
+    echo "Genome fasta file URL: ${SOURCE_DNA_URL}/$FASTA_GZ" | proc_stdout ${RECORD} fasta_url
 
-    wget --no-verbose ${ENSEMBL_DNA_URL}/$FASTA_GZ 2>&1 | proc_stdout
+    wget --no-verbose ${SOURCE_DNA_URL}/$FASTA_GZ 2>&1 | proc_stdout
     echo | proc_stdout
 
     echo "Download ${CHECKSUMS}..." | proc_stdout
-    wget --no-verbose ${ENSEMBL_DNA_URL}/${CHECKSUMS} 2>&1 | proc_stdout
+    wget --no-verbose ${SOURCE_DNA_URL}/${CHECKSUMS} 2>&1 | proc_stdout
     mv ${CHECKSUMS} ${CHECKSUMS}.dna 2>&1 | proc_stdout
     echo | proc_stdout
 
     echo "Download ${README}..." | proc_stdout
-    wget --no-verbose ${ENSEMBL_DNA_URL}/${README} 2>&1 | proc_stdout
+    wget --no-verbose ${SOURCE_DNA_URL}/${README} 2>&1 | proc_stdout
     mv ${README} ${README}.dna 2>&1 | proc_stdout
     echo | proc_stdout
 
     echo "CHECKPOINT" | proc_stdout
     echo "Calculated $FASTA_GZ checksum is " | proc_stdout ${RECORD}
-    sum $FASTA_GZ | tee ${FASTA_GZ}.checksum | proc_stdout ${RECORD}
+    ${CHECKSUM_PROGRAM} $FASTA_GZ | tee ${FASTA_GZ}.checksum | proc_stdout ${RECORD}
     echo "Expected $FASTA_GZ checksum is " | proc_stdout ${RECORD}
     grep $FASTA_GZ ${CHECKSUMS}.dna | awk '{print$1,$2}' 2>&1 | proc_stdout ${RECORD}
     echo | proc_stdout
@@ -44,13 +44,13 @@ function get_fasta_file
     echo "Copy and uncompress fasta file ${FASTA_GZ}..." | proc_stdout
     date '+%Y.%m.%d:%H.%M.%S' | proc_stdout ${RECORD} fasta_download_date
 
-    echo "Source directory is ${ENSEMBL_DNA_URL}" | proc_stdout
+    echo "Source directory is ${SOURCE_DNA_URL}" | proc_stdout
     echo "Fasta filename is $FASTA_GZ" | proc_stdout
 
     echo "Copy fasta file..." | proc_stdout
-    echo "Genome fasta file URL: ${ENSEMBL_DNA_URL}/$FASTA_GZ" | proc_stdout ${RECORD} fasta_url
+    echo "Genome fasta file URL: ${SOURCE_DNA_URL}/$FASTA_GZ" | proc_stdout ${RECORD} fasta_url
 
-    cp "${ENSEMBL_DNA_URL}/$FASTA_GZ" .
+    cp "${SOURCE_DNA_URL}/$FASTA_GZ" .
 
   fi
 
@@ -64,7 +64,7 @@ function get_fasta_file
 
 
 #
-# Count the Ensembl sequence types in the fasta file.
+# Count the genome sequence types in the fasta file.
 #
 function get_fasta_info()
 {
@@ -73,9 +73,9 @@ function get_fasta_info()
   $MD5_SEQ $FASTA > $FASTA.md5_seq
   echo | proc_stdout
 
-  echo "md5 checksums of sequences in $FASTA (reporting only names that match '([0-9]+|[XY]|MT)' )..." | proc_stdout ${RECORD}
+  echo "md5 checksums of sequences in $FASTA (reporting only names that match '([0-9]+|[XY]|MT|chr[0-9]+|chr[XYM])' )..." | proc_stdout ${RECORD}
   echo "(The ATAC-seq pipeline requires that these have the order 1 ... <n> X Y MT)" | proc_stdout ${RECORD}
-  cat $FASTA.md5_seq | awk '$1~/^([0-9]+|[XY]|MT)/' | proc_stdout ${RECORD}
+  cat $FASTA.md5_seq | awk '$1~/^([0-9]+|[XY]|MT|chr[0-9]+|chr[XYM])/' | proc_stdout ${RECORD}
   echo | proc_stdout
 
   echo "Get fasta sequence headers in $FASTA file..." | proc_stdout

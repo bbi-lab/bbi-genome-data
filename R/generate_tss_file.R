@@ -5,13 +5,13 @@ library(argparse)
 options(scipen=999)
 options(stringsAsFactors = FALSE)
 
-parser = argparse::ArgumentParser(description='Makes a BED file of TSSs provided a GENCODE GTF file.')
-parser$add_argument('input_file', help='GENCODE GTF file.')
+parser <- argparse::ArgumentParser(description='Makes a BED file of TSSs provided a Ensembl/Gencode GTF file.')
+parser$add_argument('input_file', help='Ensembl/Gencode GTF file.')
 parser$add_argument('output_file', help='Output TSS BED file.')
-args = parser$parse_args()
+args <- parser$parse_args()
 
 get_tss <- function(gene_ann) {
-  gene_ann = subset(gene_ann, type == "transcript")
+  gene_ann <- subset(gene_ann, type == "transcript")
   pos <- subset(gene_ann, strand == "+")
   neg <- subset(gene_ann, strand == "-")
   pos <- pos[order(pos[,"start"]),]
@@ -28,10 +28,18 @@ get_tss <- function(gene_ann) {
   return(rbind(pos, neg))
 }
 
-tss = get_tss(rtracklayer::readGFF(args$input_file))
+tss <- get_tss(rtracklayer::readGFF(args$input_file))
 
 if ('transcript_support_level' %in% colnames(tss)) {
-  tss = subset(tss, is.na(transcript_support_level) | transcript_support_level >= 2)
+  tss <- subset(tss, is.na(transcript_support_level) | transcript_support_level >= 2)
 }
-tss$score = '.'
-write.table(tss[, c('seqid', 'start', 'end', 'gene_id', 'score', 'strand', 'gene_name', 'transcript_id', 'transcript_biotype')], quote=F, row.names=F, col.names=F, sep='\t', file=args$output_file)
+tss$score <- '.'
+
+if( 'transcript_biotype' %in% colnames(tss)) {
+  write.table(tss[, c('seqid', 'start', 'end', 'gene_id', 'score', 'strand', 'gene_name', 'transcript_id', 'transcript_biotype')], quote=F, row.names=F, col.names=F, sep='\t', file=args$output_file)
+} else if( 'transcript_type' %in% colnames(tss)) {
+  write.table(tss[, c('seqid', 'start', 'end', 'gene_id', 'score', 'strand', 'gene_name', 'transcript_id', 'transcript_type')], quote=F, row.names=F, col.names=F, sep='\t', file=args$output_file)
+} else {
+  message('Unable to find attribute transcript_type/transcript_biotype.')
+  quit('no', status=1)
+}

@@ -20,35 +20,46 @@ function barnyard_setup_source_files()
 
   #
   # Copy and edit human fasta and gtf files.
-  # 
-  source ${ORGANISM_FILE_DIR}/genome.human.sh
+  #
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    source ${ORGANISM_FILE_DIR}/genome.human_gencode.sh
+  else
+    source ${ORGANISM_FILE_DIR}/genome.human.sh
+  fi
+
   source ${SCRIPT_DIR}/all.02.definitions.sh
   SRC_HUMAN_FASTA_FINISHED="${GENOME_DIR}/${FASTA_FINISHED}"
 
-  echo "Edit human ${FASTA_FINISHED} into ${HUMAN_FASTA_FINISHED} by adding 'HUMAN_' to chr names..." | proc_stdout
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
+  echo "Edit human ${SRC_HUMAN_FASTA_FINISHED} into ${HUMAN_FASTA_FINISHED} by adding 'HUMAN_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   sed 's/^>/>HUMAN_/' ${SRC_HUMAN_FASTA_FINISHED} > ${HUMAN_FASTA_FINISHED}
   echo | proc_stdout
 
-  echo "Edit human ${GTF_GZ} into ${HUMAN_GTF} by adding 'HUMAN_' to chr names..." | proc_stdout
+  echo "Edit human ${GENOME_DIR}/${GTF_GZ} into ${HUMAN_GTF} by adding 'HUMAN_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_GTF_GZ=${GENOME_DIR}/${GTF_GZ}
   zcat $SRC_GTF_GZ | grep -v '^#' | sed 's/^/HUMAN_/' > $HUMAN_GTF
   echo | proc_stdout
 
-  echo "Edit human ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE} into ${HUMAN_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
+  echo "Edit human ${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE} into ${HUMAN_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_SIZES_FASTA_FINISHED_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}
   sed 's/^/HUMAN_/' $SRC_CHROMOSOME_SIZES_FASTA_FINISHED_FILE > $HUMAN_CHROMOSOME_SIZES_FASTA_FINISHED_FILE
   echo | proc_stdout
 
-  echo "Edit human ${CHROMOSOME_SIZES_ATAC_FILE} into ${HUMAN_CHROMOSOME_SIZES_ATAC_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
+  echo "Edit human ${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE} into ${HUMAN_CHROMOSOME_SIZES_ATAC_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_SIZES_ATAC_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE}
   sed 's/^/HUMAN_/' $SRC_CHROMOSOME_SIZES_ATAC_FILE > $HUMAN_CHROMOSOME_SIZES_ATAC_FILE
   echo | proc_stdout
 
-  echo "Edit human ${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} into ${HUMAN_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
+  echo "Edit human ${GENOME_DIR}/${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} into ${HUMAN_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} by adding 'HUMAN_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE=${GENOME_DIR}/${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE}
   sed 's/^/HUMAN_/' $SRC_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE > $HUMAN_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE
@@ -57,35 +68,46 @@ function barnyard_setup_source_files()
   #
   # Copy and edit mouse fasta and gtf files.
   # 
-  source ${ORGANISM_FILE_DIR}/genome.mouse.sh
+
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    source ${ORGANISM_FILE_DIR}/genome.mouse_gencode.sh
+  else  
+    source ${ORGANISM_FILE_DIR}/genome.mouse.sh
+  fi
+
   source ${SCRIPT_DIR}/all.02.definitions.sh
   SRC_MOUSE_FASTA_FINISHED="${GENOME_DIR}/${FASTA_FINISHED}"
 
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
 
-  echo "Edit mouse ${FASTA_FINISHED} into ${MOUSE_FASTA_FINISHED} by adding 'MOUSE_' to chr names..." | proc_stdout
+  echo "Edit mouse ${SRC_MOUSE_FASTA_FINISHED} into ${MOUSE_FASTA_FINISHED} by adding 'MOUSE_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   sed 's/^>/>MOUSE_/' ${SRC_MOUSE_FASTA_FINISHED} > ${MOUSE_FASTA_FINISHED}
   echo | proc_stdout
 
-  echo "Edit mouse ${GTF_GZ} into ${MOUSE_GTF} by adding 'MOUSE_' to chr names..." | proc_stdout
+  echo "Edit mouse ${GENOME_DIR}/${GTF_GZ} into ${MOUSE_GTF} by adding 'MOUSE_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_GTF_GZ=${GENOME_DIR}/${GTF_GZ}
   zcat $SRC_GTF_GZ | grep -v '^#' | sed 's/^/MOUSE_/' > $MOUSE_GTF
   echo | proc_stdout
 
-  echo "Edit mouse ${CHROMOSOME_SIZES_FASTA_FINISHED_FILE} into ${MOUSE_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
+  echo "Edit mouse ${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE} into ${MOUSE_CHROMOSOME_SIZES_FASTA_FINISHED_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_SIZES_FASTA_FINISHED_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_FASTA_FINISHED_FILE}
   sed 's/^/MOUSE_/' $SRC_CHROMOSOME_SIZES_FASTA_FINISHED_FILE > $MOUSE_CHROMOSOME_SIZES_FASTA_FINISHED_FILE
   echo | proc_stdout
 
-  echo "Edit mouse ${CHROMOSOME_SIZES_ATAC_FILE} into ${MOUSE_CHROMOSOME_SIZES_ATAC_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
+  echo "Edit mouse ${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE} into ${MOUSE_CHROMOSOME_SIZES_ATAC_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_SIZES_ATAC_FILE=${GENOME_DIR}/${CHROMOSOME_SIZES_ATAC_FILE}
   sed 's/^/MOUSE_/' $SRC_CHROMOSOME_SIZES_ATAC_FILE > $MOUSE_CHROMOSOME_SIZES_ATAC_FILE
   echo | proc_stdout
 
-  echo "Edit mouse ${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} into ${MOUSE_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
+  echo "Edit mouse ${GENOME_DIR}/${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} into ${MOUSE_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE} by adding 'MOUSE_' to chr names..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   SRC_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE=${GENOME_DIR}/${CHROMOSOME_WITH_MT_SIZES_ATAC_FILE}
   sed 's/^/MOUSE_/' $SRC_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE > $MOUSE_CHROMOSOME_WITH_MT_SIZES_ATAC_FILE

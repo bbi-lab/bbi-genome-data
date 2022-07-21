@@ -18,7 +18,7 @@ set -o nounset   # set -u : exit the script if you try to use an uninitialised v
 set -o errexit   # set -e : exit the script if any statement returns a non-true return value
 
 
-SCRIPT_DIR="."
+SCRIPT_DIR=`pwd`
 source ${SCRIPT_DIR}/all.00.definitions.sh
 
 

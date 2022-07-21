@@ -1,20 +1,6 @@
 #!/bin/bash
 
 #
-# GENOME_SOURCE is either 'ensembl' for genome files from Ensembl
-# or 'gencode' for genomes files from Gencode. The Gencode GTF
-# files have a UTR feature instead of the Ensembl five_prime_utr
-# and three_prime_utr features. Our scripts extend the 3' UTR
-# sequences so the scripts convert the Gencode UTR features to
-# the Ensembl five_prime_utr and three_prime_utr features using
-# the program scripts/gencode_edit_utr.py. After the conversion,
-# please check manually the conversion using
-# scripts/compare_genecode_to_ensembl_utrs.py
-# There are comments in scripts/compare_genecode_to_ensembl_utrs.py.
-#
-GENOME_SOURCE="ensembl"
-
-#
 # GROUP and ORGANISM define primarily the directories in which the
 # output files are written. The file paths have the form
 #   $STAGE_DIR/$GROUP/$ORGANISM_(gsrc|rna|star|atac)
@@ -27,43 +13,39 @@ GENOME_SOURCE="ensembl"
 # and the ORGANISM is set to a distinctive name that includes the
 # organism, for example, 'noah.macaque'.
 #
-GROUP="human"
-ORGANISM="human"
+GROUP="killifish"
+ORGANISM="killifish"
 
 #
-# Set the URL for the Ensembl/Gencode directory that contains the
-# compressed genome fasta file and the related CHECKSUM/MD5SUMS and
-# README/_README.TXT files. And set the name of the required
-# compressed genome fasta file.  The file can be downloaded by http
-# or ftp using wget, or copied from a local directory.
+# Set the URL for the Ensembl directory that contains the compressed
+# genome fasta file and the related CHECKSUM and README files. And
+# set the name of the required compressed genome fasta file.  The file
+# can be downloaded by http or ftp using wget, or copied from a local
+# directory.
 # Set WGET_FASTA_GZ=1 to download by http or ftp or
 # set WGET_FASTA_GZ=0 to copy from a local directory.
 # In both cases, the file must be gzip compressed.
-# Note: SOURCE_DNA_URL replaces ENSEMBLE_DNA_URL.
-#
-SOURCE_DNA_URL="ftp.ensembl.org:/pub/release-99/fasta/homo_sapiens/dna"
-FASTA_GZ="Homo_sapiens.GRCh38.dna.toplevel.fa.gz"
+ENSEMBL_DNA_URL="ftp.ensembl.org/pub/release-106/fasta/nothobranchius_furzeri/dna"
+FASTA_GZ="Nothobranchius_furzeri.Nfu_20140520.dna.toplevel.fa.gz"
+# ENSEMBL_DNA_URL="ftp.ensembl.org:/pub/release-99/fasta/homo_sapiens/dna"
+# FASTA_GZ="Homo_sapiens.GRCh38.dna.toplevel.fa.gz"
 WGET_FASTA_GZ=1
 
 #
-# Set the URL for the Ensembl/Gencode directory that contains the
-# compressed genome GTF file and the related CHECKSUM/MD5SUMS and
-# README/_README.TXT files. And set the name of the required
-# compressed GTF file. The file can be downloaded by http or ftp
-# using, or copied from a local directory.
+# Set the URL for the Ensembl directory that contains the compressed
+# genome GTF file and the related CHECKSUM and README files. And
+# set the name of the required compressed GTF file. The file
+# can be downloaded by http or ftp using, or copied from a local
+# directory.
 # In both cases, the file must be gzip compressed.
 # Set WGET_GTF_GZ=1 to download by http or ftp or
 # set WGET_GTF_GZ=0 to copy from a local directory.
-# Note: SOURCE_GTF_URL replaces ENSEMBLE_GTF_URL.
 #
-SOURCE_GTF_URL="ftp.ensembl.org:/pub/release-99/gtf/homo_sapiens"
-GTF_GZ="Homo_sapiens.GRCh38.99.gtf.gz"
+ENSEMBL_GTF_URL="ftp.ensembl.org/pub/release-106/gtf/nothobranchius_furzeri"
+GTF_GZ="Nothobranchius_furzeri.Nfu_20140520.106.gtf.gz"
+# ENSEMBL_GTF_URL="ftp.ensembl.org:/pub/release-99/gtf/homo_sapiens"
+# GTF_GZ="Homo_sapiens.GRCh38.99.gtf.gz"
 WGET_GTF_GZ=1
-
-# Edited Gencode GTF file with Ensembl-style five_prime_utr and three_prime_utr features. 
-# The genome.05.get_gtf_file.sh script calls gencode_edit_utr.py to edit the GTF_GZ 
-# file. This is used in for Gencode genome files.
-# GTF_EUTR_GZ=`echo ${GTF_GZ} | sed 's/\.gtf\.gz$/\.eutr\.gtf\.gz/'` 
 
 #
 # Note: at the time of this writing, the 'SEQUENCES_TO_KEEP_ALIGNER'
@@ -82,38 +64,27 @@ WGET_GTF_GZ=1
 SEQUENCES_TO_KEEP_ALIGNER=""
 
 #
-# The genome sequences selected for the ATAC-seq analysis, which
-# typically excludes the mitochondrial chromosome and unplaced and
+# The genome sequences selected for the analysis, which typically
+# excludes the mitochondrial chromosome and unplaced and
 # unlocalized scaffolds. The required sequence names must be
 # listed explicitly in the variable SEQUENCES_TO_KEEP_ATAC_ANALYSIS
 # below.
 # SEQUENCES_TO_KEEP_ATAC_ANALYSIS="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y"
-SEQUENCES_TO_KEEP_ATAC_ANALYSIS=""
+SEQUENCES_TO_KEEP_ATAC_ANALYSIS="sgr01 sgr02 sgr03 sgr04 sgr05 sgr06 sgr07 sgr08 sgr09 sgr10 sgr11 sgr12 sgr13 sgr14 sgr15 sgr16 sgr17 sgr18 sgr19"
 
 #
-# The genome sequences including mitochrondial selected for the ATAC-seq
-# analysis, which typically excludes the unplaced and unlocalized scaffolds.
-# The required sequence names must be listed explicitly in the variable.
+# The genome sequences including mitochrondial selected for the analysis,
+# which typically excludes the unplaced and unlocalized scaffolds. The
+# required sequence names must be listed explicitly in the variable
 # SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS below.
 # SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X Y MT"
-SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS=""
-
-# The transcript/gene biotypes to select from the GTF file for
-# the RNA-seq analysis. The string is a regular expression
-# alternation, with the alternation parentheses. The string
-# consists of names, or partial names, separated by vertical bars
-# without spaces. Check the script code for details.
-# Note: a default is used if this variable is not set.
-#
-RE_GENE_BIOTYPES='(protein_coding|lincRNA|lncRNA|miRNA|macro_lncRNA|antisense|3prime_overlapping_ncRNA|bidirectional_promoter_lncRNA|misc_RNA|Mt_rRNA|Mt_tRNA|non_coding|processed_transcript|ribozyme|rRNA|scaRNA|scRNA|sense_intronic|sense_overlapping|snoRNA|snRNA|sRNA|vaultRNA)'  
-
+SEQUENCES_WITH_MT_TO_KEEP_ATAC_ANALYSIS="sgr01 sgr02 sgr03 sgr04 sgr05 sgr06 sgr07 sgr08 sgr09 sgr10 sgr11 sgr12 sgr13 sgr14 sgr15 sgr16 sgr17 sgr18 sgr19"
 
 #
-# The transcript gene_biotypes to select from the GTF file for
-# the ATAC-seq analysis. The string is a regular expression
-# alternation, without the alternation parentheses, so the string
-# consists of names, or partial names, separated by vertical bars
-# without spaces. Check the script code for details.
+# The transcript gene_biotypes to select from the GTF file. The
+# string is a regular expression so the string consists of
+# names, or partial names, separated by vertical bars without
+# spaces.
 #
 SELECT_GENE_BIOTYPES="protein|lncRNA|TR_V|TR_D|TR_J|TR_C|IG_V|IG_D|IG_J|IG_C|IG_LV"
 
@@ -124,7 +95,7 @@ SELECT_GENE_BIOTYPES="protein|lncRNA|TR_V|TR_D|TR_J|TR_C|IG_V|IG_D|IG_J|IG_C|IG_
 # Notes:
 #   o  set PAR_DEFINED=1 if the PARs are defined; otherwise set it to 0.
 #
-PAR_DEFINED=1
+PAR_DEFINED=0
 PAR_BED="par_${ORGANISM}.bed"
 
 #

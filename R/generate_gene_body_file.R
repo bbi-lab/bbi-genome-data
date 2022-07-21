@@ -5,8 +5,8 @@ library(argparse)
 options(scipen=999)
 options(stringsAsFactors = FALSE)
 
-parser = argparse::ArgumentParser(description='Makes a BED file of TSSs provided a GENCODE GTF file.')
-parser$add_argument('input_file', help='GENCODE GTF file.')
+parser = argparse::ArgumentParser(description='Makes a BED file of TSSs provided a Ensembl/Gencode GTF file.')
+parser$add_argument('input_file', help='Ensembl/Gencode GTF file.')
 parser$add_argument('output_file', help='Output gene body BED file.')
 args = parser$parse_args()
 
@@ -22,4 +22,13 @@ get_gene_body <- function(gene_ann) {
 
 gene_bodies = get_gene_body(rtracklayer::readGFF(args$input_file))
 gene_bodies$score = '.'
-write.table(gene_bodies[, c('seqid', 'start', 'end', 'gene_id', 'score', 'strand', 'gene_name', 'gene_biotype')], quote=F, row.names=F, col.names=F, sep='\t', file=args$output_file)
+
+if('gene_biotype' %in% colnames(gene_bodies)) {
+  write.table(gene_bodies[, c('seqid', 'start', 'end', 'gene_id', 'score', 'strand', 'gene_name', 'gene_biotype')], quote=F, row.names=F, col.names=F, sep='\t', file=args$output_file)
+} else if('gene_type' %in% colnames(gene_bodies)) {
+  write.table(gene_bodies[, c('seqid', 'start', 'end', 'gene_id', 'score', 'strand', 'gene_name', 'gene_type')], quote=F, row.names=F, col.names=F, sep='\t', file=args$output_file)
+} else {
+  message('Unable to find attribute gene_type/gene_biotype.')
+  quit('no', status=1)
+}
+
