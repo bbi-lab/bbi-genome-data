@@ -2,6 +2,11 @@
 
 function setup_source_files_star()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Make copies of and soft links to required files from ${GENOME_DIR}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
@@ -28,6 +33,11 @@ function setup_source_files_star()
 
 function make_aligner_index()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "STAR version: " | proc_stdout ${RECORD}
   ${STAR_ALIGNER} --version | proc_stdout ${RECORD}
 

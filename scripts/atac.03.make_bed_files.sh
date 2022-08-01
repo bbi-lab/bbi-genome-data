@@ -3,6 +3,11 @@
 
 function setup_source_files()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Make copies of and soft links to required files from ${GENOME_DIR}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
@@ -60,6 +65,11 @@ function setup_source_files()
 
 function make_whitelist_regions_file()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Make whitelist regions bed file ${WHITELIST_REGIONS_BED}..."  | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   cat $CHROMOSOME_SIZES_ATAC_FILE \
@@ -88,6 +98,11 @@ function make_whitelist_regions_file()
 
 function make_tss_file()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   if [ "${SELECT_GENE_BIOTYPES}" == "" ]
   then
     echo "Error: SELECT_GENE_BIOTYPES variable is not set"
@@ -210,6 +225,11 @@ function make_tss_file()
 
 function compress_tss_temp_file()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Compress a copy of ${TSS_BED}.temp to make ${TSS_BED}.temp.bz2..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   bzip2 -k ${TSS_BED}.temp
@@ -224,6 +244,11 @@ function compress_tss_temp_file()
 
 function make_gene_bodies_file()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Make gene bodies bed file ${GENE_BODIES_PLUS_UPSTREAM_BED}.gz..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
@@ -355,6 +380,11 @@ function make_gene_bodies_file()
 
 function compress_gene_bodies_temp_file()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Compress a copy of ${GENE_BODIES_BED}.temp to make ${GENE_BODIES_BED}.temp.bz2..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   bzip2 -k ${GENE_BODIES_BED}.temp

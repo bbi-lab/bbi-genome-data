@@ -22,6 +22,17 @@ BEDTOOLS="bedtools"
 #
 # Files.
 #
-CHECKSUMS="CHECKSUMS"
-README="README"
+if [ "${GENOME_SOURCE}" == "ensembl" ]
+then
+  CHECKSUMS="CHECKSUMS"
+  README="README"
+elif [ "${GENOME_SOURCE}" == "gencode" ]
+then
+  CHECKSUMS="MD5SUMS"
+  README="_README.TXT"
+else
+  echo "Error: unknown GENOME_SOURCE"
+  exit -1
+fi
+
 FINAL_IDS_FILE="sequences_to_keep.txt"

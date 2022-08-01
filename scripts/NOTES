@@ -42,3 +42,36 @@ possible additions
      /net/bbi/vol1/data/sw_install/kent_util/bin/faCount ${FASTA_FINISHED} | grep '^total' | awk '{printf("%3.2e\n",$2-$7);}'
      2.94e+09
 
+
+== Gencode UTR identification
+
+I chose to write a Python script that converts the Gencode
+UTR features to Ensembl-style five_prime_utr and three_prime_utr
+features.
+
+
+-- WWW search for Gencode UTR identification
+URL: https://www.biostars.org/p/77188/
+
+You can use gencode_utr_fix to update your gtf. It replaces UTR features with five_prime_utr and three_prime_utr features. For example:
+
+gencode_utr_fix --input_gtf gencode.v29.annotation.gtf --output_gtf gencode.v29.annotation_utr.gtf
+
+URL gencode_utr_fix: https://github.com/MuhammedHasan/gencode_utr_fix
+
+more
+
+URL: https://www.biostars.org/p/282458/
+
+
+  Notes:
+    o  gencode_utr_fix reads the GTF file into a panda data frame and the modified
+       GTF is written to a file in which the rows are ordered differently, if I
+       remember correctly. I believe that the attributes are reordered too. I prefer
+       that the order remains the same.
+    o  the GTF that results from running gencode_utr_fix is smaller than the original
+       GTF file, I did not track down the difference in the time that I allowed for
+       the comparison. Based on this difference, I decide to not use gencode_utr_fix.
+
+
+

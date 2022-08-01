@@ -1,7 +1,16 @@
 #!/bin/bash
 
+
+EXTENSION_LIST="500"
+
+
 function setup_source_files_bed()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Make soft link from ${GENOME_DIR}/${GTF_GZ} to ./${GTF_GZ}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
 
@@ -25,6 +34,14 @@ function setup_source_files_bed()
 
 function check_gtf()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
+  echo "CHECKPOINT" | proc_stdout
+  echo "Count number of selected feature types and gene biotypes in ${GTF_GZ}..." | proc_stdout ${RECORD}
+
   zcat ${GTF_GZ} \
   | grep -v '^#' \
   | awk 'BEGIN{ FS="\t"; }
@@ -34,7 +51,7 @@ function check_gtf()
             n = split( $9, arr1, ";" );
             for( i = 1; i <= n; ++i ) {
               split( arr1[i], arr2, " " );
-              if( arr2[1] == "gene_biotype" ) {
+              if( arr2[1] == "'${GENE_BIOTYPE}'" ) {
                 count_biotype[arr2[2]] += 1;
                 break;
               }
@@ -54,6 +71,7 @@ function check_gtf()
            printf( "%d\t%s\n", count_biotype[biotype], biotype_out );
         }
      }' | proc_stdout
+
 }
 
 #
@@ -61,14 +79,29 @@ function check_gtf()
 #
 
 
-RE_GENE_BIOTYPES='(protein_coding|lincRNA|miRNA|macro_lncRNA|antisense|3prime_overlapping_ncRNA|bidirectional_promoter_lncRNA|misc_RNA|Mt_rRNA|Mt_tRNA|non_coding|processed_transcript|ribozyme|rRNA|scaRNA|scRNA|sense_intronic|sense_overlapping|snoRNA|snRNA|sRNA|vaultRNA)'
+#
+# Set a default RE_GENE_BIOTYPES regex if the RE_GENE_BIOTYPES
+# variable does not exist or is null.
+# Notes: 
+#   o  this is a regex alternation that includes the enclosing parentheses. 
+#
+set +u
+if [ -z "${RE_GENE_BIOTYPES}" ]; then
+  RE_GENE_BIOTYPES='(protein_coding|lincRNA|lncRNA|miRNA|macro_lncRNA|antisense|3prime_overlapping_ncRNA|bidirectional_promoter_lncRNA|misc_RNA|Mt_rRNA|Mt_tRNA|non_coding|processed_transcript|ribozyme|rRNA|scaRNA|scRNA|sense_intronic|sense_overlapping|snoRNA|snRNA|sRNA|vaultRNA)'
+fi
+set -u
 
 #
 # Step 1: extracting gene annotations from GTF file
 #
 function get_gene_annotations()
 {
-  echo "Step 1: extracting gene annotations from GTF file" | proc_stdout
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
+  echo "Step 1: extracting gene annotations from GTF file ${GTF_GZ}" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   echo "Included gene biotypes: ${RE_GENE_BIOTYPES}" | proc_stdout ${RECORD} gtf_include_biotypes
   zcat $GTF_GZ | grep -v "^#" \
@@ -77,8 +110,8 @@ function get_gene_annotations()
   } $3 == "gene" {
       gene_id = "";
       gene_name = "";
-      gene_biotype = "";
-  
+      '${GENE_BIOTYPE}' = "";
+ 
       n = split($9, arr, ";");
       for (i = 1; i <= n; i++) {
           split(arr[i], arr2, " ");
@@ -86,26 +119,27 @@ function get_gene_annotations()
               gene_id = arr2[2];
           } else if (arr2[1] == "gene_name") {
               gene_name = arr2[2];
-          } else if (arr2[1] == "gene_biotype") {
-              gene_biotype = arr2[2];
+          } else if (arr2[1] == "'${GENE_BIOTYPE}'") {
+              '${GENE_BIOTYPE}' = arr2[2];
           }
       }
-  
+ 
       gsub(/"/, "", gene_id);
       gsub(/"/, "", gene_name);
-      gsub(/"/, "", gene_biotype);
-  
+      gsub(/"/, "", '${GENE_BIOTYPE}');
+ 
       if (gene_name == "")
           gene_name = gene_id;
-  
-      if ( gene_biotype ~ /^'${RE_GENE_BIOTYPES}'$/) {
+ 
+      if ( '${GENE_BIOTYPE}' ~ /^'${RE_GENE_BIOTYPES}'$/) {
           printf "%s\t%s\t%s\t%s\t%d\t%s\t%s\n",
               $1, $4, $5, gene_id, 255, $7, gene_name;
       }
     }' \
   | sort -k1,1 -k2,2n -S 4G \
   > tmp.genes.bed
-  
+
+ 
   cut -f 4,7 tmp.genes.bed \
   | sort -k1,1 > latest.gene.annotations
 }
@@ -116,7 +150,12 @@ function get_gene_annotations()
 #
 function get_transcript_annotations()
 {
-  echo "Step 2: extracting transcript annotations from GTF file" | proc_stdout
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
+  echo "Step 2: extracting transcript annotations from GTF file ${GTF_GZ}" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   zcat $GTF_GZ | grep -v "^#" \
   | gawk 'BEGIN {
@@ -124,10 +163,10 @@ function get_transcript_annotations()
   } $3 == "transcript" {
       gene_id = "";
       gene_name = "";
-      gene_biotype = "";
+      '${GENE_BIOTYPE}' = "";
       transcript_id = "";
       transcript_name = "";
-  
+ 
       n = split($9, arr, ";");
       for (i = 1; i <= n; i++) {
           split(arr[i], arr2, " ");
@@ -135,28 +174,30 @@ function get_transcript_annotations()
               gene_id = arr2[2];
           } else if (arr2[1] == "gene_name") {
               gene_name = arr2[2];
-          } else if (arr2[1] == "gene_biotype") {
-              gene_biotype = arr2[2];
+          } else if (arr2[1] == "'${GENE_BIOTYPE}'") {
+              '${GENE_BIOTYPE}' = arr2[2];
           } else if (arr2[1] == "transcript_id") {
               transcript_id = arr2[2];
           }
       }
-  
+ 
       gsub(/"/, "", gene_id);
       gsub(/"/, "", gene_name);
-      gsub(/"/, "", gene_biotype);
+      gsub(/"/, "", '${GENE_BIOTYPE}');
       gsub(/"/, "", transcript_id);
-  
+ 
       if (gene_name == "")
           gene_name = gene_id;
-  
-      if ( gene_biotype ~ /^'${RE_GENE_BIOTYPES}'$/) {
+ 
+      if ( '${GENE_BIOTYPE}' ~ /^'${RE_GENE_BIOTYPES}'$/) {
           printf "%s\t%s\t%s\t%s\t%d\t%s\t%s\t%s\n",
               $1, $4, $5, transcript_id, 255, $7, gene_id, gene_name;
       }
     }' \
   | sort -k1,1 -k2,2n -S 4G \
   > tmp.transcripts.bed
+
+
 }
 
 
@@ -165,9 +206,14 @@ function get_transcript_annotations()
 #
 function extend_3p_utr_gene_annotations()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Step 3: extending 3' UTRs of gene annotations" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
-  for EXTENSION in "500"; do
+  for EXTENSION in $EXTENSION_LIST; do
       awk -v EXTENSION=$EXTENSION 'BEGIN { OFS = "\t"; } {
           if ($6 == "+") {
               $3 = $3 + EXTENSION;
@@ -247,13 +293,17 @@ function extend_3p_utr_gene_annotations()
 #
 # Step 4: extending 3' UTRs of transcript annotations
 #
-EXTENSION="500"
 function extend_3p_utr_transcript_annotations()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Step 4: extending 3' UTRs of transcript annotations" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   echo "3' UTRs extended by ${EXTENSION} bps" | proc_stdout ${RECORD} utr_extension
-  for EXTENSION in $EXTENSION; do
+  for EXTENSION in $EXTENSION_LIST; do
       awk -v EXTENSION=$EXTENSION 'BEGIN { OFS = "\t"; } {
           if ($6 == "+") {
               $3 = $3 + EXTENSION;
@@ -366,37 +416,42 @@ function extend_3p_utr_transcript_annotations()
 #
 function get_number_exons_per_transcript()
 {
-  echo "Step 5: extracting number of exons per transcript from GTF file" | proc_stdout
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
+  echo "Step 5: extracting number of exons per transcript from GTF file ${GTF_GZ}" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   zcat $GTF_GZ | grep -v "^#" \
   | awk 'BEGIN {
       FS = "\t";
   } $3 == "exon" {
       gene_id = "";
-      gene_biotype = "";
+      '${GENE_BIOTYPE}' = "";
       transcript_id = "";
       exon_number = "";
-  
+ 
       n = split($9, arr, ";");
       for (i = 1; i <= n; i++) {
           split(arr[i], arr2, " ");
           if (arr2[1] == "gene_id") {
               gene_id = arr2[2];
-          } else if (arr2[1] == "gene_biotype") {
-              gene_biotype = arr2[2];
+          } else if (arr2[1] == "'${GENE_BIOTYPE}'") {
+              '${GENE_BIOTYPE}' = arr2[2];
           } else if (arr2[1] == "transcript_id") {
               transcript_id = arr2[2];
           } else if (arr2[1] == "exon_number") {
               exon_number = arr2[2];
           }
       }
-  
+ 
       gsub(/"/, "", gene_id);
-      gsub(/"/, "", gene_biotype);
+      gsub(/"/, "", '${GENE_BIOTYPE}');
       gsub(/"/, "", transcript_id);
       gsub(/"/, "", exon_number);
-  
-      if ( gene_biotype ~ /^'${RE_GENE_BIOTYPES}'$/) {
+ 
+      if ( '${GENE_BIOTYPE}' ~ /^'${RE_GENE_BIOTYPES}'$/) {
           printf "%s\t%s\n",
               transcript_id, exon_number;
       }
@@ -404,6 +459,7 @@ function get_number_exons_per_transcript()
   | sort -k1,1 -S 4G \
   | $DATAMASH_PATH -g 1 max 2 \
   > tmp.transcript.number.of.exons
+
 }
 
 
@@ -412,9 +468,14 @@ function get_number_exons_per_transcript()
 #
 function make_extended_utr_gtf()
 {
-  echo "Step 6: creating new GTF file with extended 3' UTRs" | proc_stdout
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
+  echo "Step 6: creating new GTF file with extended 3' UTRs from GTF file ${GTF_GZ}" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
-  for EXTENSION in "500"; do
+  for EXTENSION in $EXTENSION_LIST; do
       zcat $GTF_GZ \
       | grep -v "^#" \
       | awk \
@@ -431,35 +492,35 @@ function make_extended_utr_gtf()
                print;
              } else {
                gene_id = "";
-               gene_biotype = "";
+               '${GENE_BIOTYPE}' = "";
                transcript_id = "";
                exon_number = 0;
-   
+  
                n = split($9, arr, ";");
                for (i = 1; i <= n; i++) {
                  split(arr[i], arr2, " ");
                  if (arr2[1] == "gene_id") {
                      gene_id = arr2[2];
-                 } else if (arr2[1] == "gene_biotype") {
-                     gene_biotype = arr2[2];
+                 } else if (arr2[1] == "'${GENE_BIOTYPE}'") {
+                     '${GENE_BIOTYPE}' = arr2[2];
                  } else if (arr2[1] == "transcript_id") {
                      transcript_id = arr2[2];
                  } else if (arr2[1] == "exon_number") {
                      exon_number = arr2[2];
                  }
                }
-   
+  
                gsub(/"/, "", gene_id);
-               gsub(/"/, "", gene_biotype);
+               gsub(/"/, "", '${GENE_BIOTYPE}');
                gsub(/"/, "", transcript_id);
                gsub(/"/, "", exon_number);
-   
+  
                exon_number = int(exon_number);
-   
+  
                # start = $4
                # end = $5
                # strand = $7
-   
+  
                if ($3 == "gene") {
                  if (gene_id in effective_extension) {
                    if ($7 == "+")
@@ -477,8 +538,8 @@ function make_extended_utr_gtf()
                          $4 = $4 - effective_extension[transcript_id];
                  }
                }
-   
-               if ( gene_biotype ~ /^'${RE_GENE_BIOTYPES}'$/)
+  
+               if ( '${GENE_BIOTYPE}' ~ /^'${RE_GENE_BIOTYPES}'$/)
                    print;
              }
            }' \
@@ -486,6 +547,7 @@ function make_extended_utr_gtf()
            tmp.genes.3p.UTR.extended.$EXTENSION.bp.effective.values.txt \
            tmp.transcript.number.of.exons - \
            > tmp.transcripts.3p.UTR.extended.$EXTENSION.bp.gtf
+
   done
 }
 
@@ -495,64 +557,70 @@ function make_extended_utr_gtf()
 #
 function make_scirna_pipeline_bed_files()
 {
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
   echo "Step 7: making sci-RNA-seq pipeline files from 3' UTR extended GTF file" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   cat tmp.transcripts.3p.UTR.extended.$EXTENSION.bp.gtf | grep -v "^#" \
   | awk 'BEGIN {
-      FS = "\t";
+      FS = "\t"; 
   } $3 == "gene" {
       gene_id = "";
-      gene_biotype = "";
-  
-      n = split($9, arr, ";");
+      '${GENE_BIOTYPE}' = "";
+
+      n = split($9, arr, ";"); 
       for (i = 1; i <= n; i++) {
-          split(arr[i], arr2, " ");
+          split(arr[i], arr2, " "); 
           if (arr2[1] == "gene_id") {
               gene_id = arr2[2];
-          } else if (arr2[1] == "gene_biotype") {
-              gene_biotype = arr2[2];
+          } else if (arr2[1] == "'${GENE_BIOTYPE}'") {
+              '${GENE_BIOTYPE}' = arr2[2];
           }
       }
-  
+
       gsub(/"/, "", gene_id);
-      gsub(/"/, "", gene_biotype);
-  
+      gsub(/"/, "", '${GENE_BIOTYPE}');
+
       printf "%s\t%s\t%s\t%s\t%d\t%s\n",
           $1, $4, $5, gene_id, 255, $7;
   }' | sort -k1,1 -k2,2n -S 4G \
   > latest.genes.bed
   
   cat tmp.transcripts.3p.UTR.extended.$EXTENSION.bp.gtf | awk 'BEGIN {
-      FS = "\t";
+      FS = "\t"; 
   } $3 == "exon" {
       gene_id = "";
-      gene_type = "";
+      '${GENE_BIOTYPE}' = ""; 
       transcript_id = "";
       exon_number = 0;
-  
-      n = split($9, arr, ";");
+
+      n = split($9, arr, ";"); 
       for (i = 1; i <= n; i++) {
-          split(arr[i], arr2, " ");
+          split(arr[i], arr2, " "); 
           if (arr2[1] == "gene_id") {
               gene_id = arr2[2];
-          } else if (arr2[1] == "gene_biotype") {
-              gene_biotype = arr2[2];
+          } else if (arr2[1] == "'${GENE_BIOTYPE}'") {
+              '${GENE_BIOTYPE}' = arr2[2];
           } else if (arr2[1] == "transcript_id") {
               transcript_id = arr2[2];
           } else if (arr2[1] == "exon_number") {
               exon_number = arr2[2];
           }
       }
-  
+
       gsub(/"/, "", gene_id);
-      gsub(/"/, "", gene_type);
+      gsub(/"/, "", '${GENE_BIOTYPE}');
       gsub(/"/, "", transcript_id);
       gsub(/"/, "", exon_number);
-  
+
       printf "%s\t%s\t%s\t%s\t%d\t%s\t%s\t%s\n",
           $1, $4, $5, transcript_id, 255, $7, gene_id, exon_number;
   }' | sort -k1,1 -k2,2n -k3,3n -S 4G \
   > latest.exons.bed
+
 }
 
 
@@ -561,33 +629,39 @@ function make_scirna_pipeline_bed_files()
 #
 function get_rrna_gene_annotations()
 {
-  echo "Step 8: extracting rRNA gene annotations from GTF file" | proc_stdout
+  if [ "${GENOME_SOURCE}" == "gencode" ]
+  then
+    GTF_GZ=${GTF_EUTR_GZ}
+  fi
+
+  echo "Step 8: extracting rRNA gene annotations from GTF file ${GTF_GZ}" | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   zcat $GTF_GZ | awk 'BEGIN {
       FS = "\t";
   } $3 == "gene" {
       gene_id = "";
-      gene_type = "";
-  
+      '${GENE_BIOTYPE}' = "";
+
       n = split($9, arr, ";");
       for (i = 1; i <= n; i++) {
           split(arr[i], arr2, " ");
           if (arr2[1] == "gene_id") {
               gene_id = arr2[2];
-          } else if (arr2[1] == "gene_biotype") {
-              gene_biotype = arr2[2];
+          } else if (arr2[1] == "'${GENE_BIOTYPE}'") {
+              '${GENE_BIOTYPE}' = arr2[2];
           }
       }
-  
+
       gsub(/"/, "", gene_id);
-      gsub(/"/, "", gene_biotype)
-  
-      if (gene_biotype == "rRNA") {
+      gsub(/"/, "", '${GENE_BIOTYPE}')
+
+      if ('${GENE_BIOTYPE}' == "rRNA") {
           printf "%s\t%s\t%s\n",
               $1, $4, $5;
       }
   }' | sort -k1,1 -k2,2n -k3,3n -S 4G \
   > latest.rRNA.gene.regions.union.bed
+
 }
 
 
