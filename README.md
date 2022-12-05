@@ -101,6 +101,17 @@ Note: All of the scripts above are meant to be run from a qlogin session only. S
       *  _*.fa.finished_  is the _*.fa.filtered_  file with pseudo-autosomal regions (PARs) masked and/or manual modifications, if either is applied; otherwise, it is the same as _*.fa.filtered_
       *  _*.fa.finished.bz2_  is the _*.fa.finished_  file with *bzip2* compression
   *  if necessary, make manual edits to the _*.fa.finished_  file and compress it with `bzip2 -k`.  For example, in the Ensembl release 99, the *Macaca mulatta* genome does not include the mitochondrial chromosome so you may want to add it to the _*.fa.finished_  fasta file. You may want to describe manual modifications in a 'TAG' prefixed line added to the log.out file
+  *  custom genome preparation
+      *  download the base FASTA and GTF files to a source directory
+      *  add, remove, or modify the sequences in the FASTA file and edit the GTF file accordingly. The header for sequences that you want included in the finished FASTA file must have the token 'REF' in the fourth field, when you select sequences using the *sequences_to_keep_ref()* function.
+      *  make an organism file for the custom genome in which
+          * ENSEMBL_DNA_URL points to the source directory with the modified FASTA file
+          * ENSEMBL_GTF_URL points to the source directory with the modified GTF file
+          * FASTA_GZ is the name of the modified, compressed FASTA file
+          * GTF_GZ is the name of the modified, compressed GTF file
+          * WGET_FASTA_GZ=0
+          * WGET_GTF_GZ=0
+      *  continue by running the *genome.01.run.sh*, *rna.01.run.sh*, and *atac.01.run.sh* scripts
   *  Ensembl fasta files
       *  we download the _*.dna.toplevel.fa_  fasta file
       *  the toplevel fasta files can have a variety of sequences, which are described at various web sites including
@@ -110,7 +121,7 @@ Note: All of the scripts above are meant to be run from a qlogin session only. S
   *  there is information on selecting and processing genome sequences at <http://lh3.github.io/2017/11/13/which-human-reference-genome-to-use/> and <https://www.biostars.org/p/342482/>
   *  how to select fasta sequences from the Ensembl fasta file
       *  the functions *sequences_to_keep_ref()* and *sequences_to_keep_named()* make a file called *sequences_to_keep.txt* that has the names of the sequences to copy from the Ensembl fasta to  _*.fa.filtered_
-      *  *sequences_to_keep_ref()* chooses sequences with the word REF in the header and writes the sequence names to the file *sequences_to_keep.txt*
+      *  *sequences_to_keep_ref()* chooses sequences with the word REF as the 4th token in the header and writes the sequence names to the file *sequences_to_keep.txt*
       *  *sequences_to_keep_named()* copies the sequence names listed in the variable *SEQUENCES_TO_KEEP_ALIGNER*, which is defined in the *genome.&lt;organism&gt;.sh* file, to the file *sequences_to_keep.txt*
       *  use either *sequences_to_keep_ref()* or *sequences_to_keep_named()* in *genome.01.run.sh* but not both
   *  the barnyard genome files are built from the human and mouse files in the *human_gsrc* and *mouse_gsrc* directories so run *genome.01.run.sh* for human and mouse (and preserve the fasta files in them) and then run *genome.01.run_barnyard.sh*
