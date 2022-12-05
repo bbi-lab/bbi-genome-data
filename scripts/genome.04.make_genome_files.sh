@@ -10,13 +10,14 @@
 #      we expect to be reference sequences.
 #   o  use sequences_to_keep_ref(), sequences_to_keep_named(), or
 #      sequences_to_keep_all to make the file $FINAL_IDS_FILE.
-#
+#   o  allow for whitespace character following the REF at the
+#      end of the header line
 function sequences_to_keep_ref()
 {
   echo "Keep the REF sequences for read alignments in ${FASTA}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   cat ${FASTA}.headers \
-    | awk '{if($4=="REF"){print$1}}' \
+    | awk '{if($4~/^REF[[:space:]]*$/){print$1}}' \
     | sed 's/^>//' > $FINAL_IDS_FILE
   echo | proc_stdout
 
