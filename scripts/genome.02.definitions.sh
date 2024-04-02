@@ -7,8 +7,8 @@
 module purge
 source /etc/profile.d/modules.sh
 module load modules modules-init modules-gs
-module load samtools/1.9
-module load bedtools/2.29.2
+module load samtools/1.19
+module load bedtools/2.31.1
 
 
 #

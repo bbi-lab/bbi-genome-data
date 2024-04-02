@@ -7,10 +7,10 @@
 module purge
 source /etc/profile.d/modules.sh
 module load modules modules-init modules-gs
-module load bedtools/2.29.2
-module load gmp/6.1.2
-module load mpfr/4.0.1
-module load gcc/8.1.0
+module load bedtools/2.31.1
+# module load gmp/6.1.2
+# module load mpfr/4.0.1
+#module load gcc/8.1.0
 module load STAR/2.6.1d
 
 
