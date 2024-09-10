@@ -7,16 +7,15 @@
 module purge
 source /etc/profile.d/modules.sh
 module load modules modules-init modules-gs
-module load tbb/2020_U2
-module load bedtools/2.29.2
-module load gcc/8.1.0
-module load R/3.6.1
+module load bedtools/2.31.1
+module load R/4.3.2
 
 #
 # Executable paths.
 #
 BEDTOOLS="bedtools"
-BOWTIE2_BUILD="/net/bbi/vol1/data/sw_install/bowtie2-2.4.1/bin/bowtie2-build"
+# Define BOWTIE2_BUILD in atac.04.make_aligner_index.sh.
+# BOWTIE2_BUILD="/net/bbi/vol1/data/sw_install/bowtie2-2.5.3/bin/bowtie2-build"
 FACOUNT="/net/bbi/vol1/data/sw_install/kent_util/bin/faCount"
 
 

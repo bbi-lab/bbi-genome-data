@@ -63,9 +63,9 @@ function make_aligner_index()
   echo >> ${STAR_DIR}/run_star_index.sh
   echo "source /etc/profile.d/modules.sh" >> ${STAR_DIR}/run_star_index.sh
   echo "module load modules modules-init modules-gs" >> ${STAR_DIR}/run_star_index.sh
-  echo "module load gmp/6.1.2"  >> ${STAR_DIR}/run_star_index.sh
-  echo "module load mpfr/4.0.1"  >> ${STAR_DIR}/run_star_index.sh
-  echo "module load gcc/8.1.0"  >> ${STAR_DIR}/run_star_index.sh
+#  echo "module load gmp/6.1.2"  >> ${STAR_DIR}/run_star_index.sh
+#  echo "module load mpfr/4.0.1"  >> ${STAR_DIR}/run_star_index.sh
+#  echo "module load gcc/8.1.0"  >> ${STAR_DIR}/run_star_index.sh
   echo "module load STAR/2.6.1d"  >> ${STAR_DIR}/run_star_index.sh
   echo >> ${STAR_DIR}/run_star_index.sh
   echo "$STAR_ALIGNER --runThreadN 4 --runMode genomeGenerate --genomeDir $STAR_DIR --genomeFastaFiles ${STAR_DIR}/${FASTA_FINISHED} --sjdbGTFfile ${RNA_DIR}/tmp.transcripts.3p.UTR.extended.500.bp.gtf --sjdbOverhang 100" >> ${STAR_DIR}/run_star_index.sh

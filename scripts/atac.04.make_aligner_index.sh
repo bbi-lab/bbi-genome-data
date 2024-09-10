@@ -3,7 +3,10 @@
 
 function make_aligner_index()
 {
-  module load gcc/8.1.0
+#  module load gcc/8.1.0
+  module load bowtie2/2.5.3
+
+  BOWTIE2_BUILD="/net/gs/vol3/software/modules-sw/bowtie2/2.5.3/Linux/Ubuntu22.04/x86_64/bin/bowtie2"
 
   echo "Bowtie2-build version: " | proc_stdout ${RECORD}
   ${BOWTIE2_BUILD} --version | proc_stdout ${RECORD}
