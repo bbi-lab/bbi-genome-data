@@ -20,7 +20,8 @@ STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
 #   GENOME_SRC     initial genome files
 #   GENOME_DIR     genome source directory
 #   RNA_DIR        sci-RNA-seq files
-#   STAR_DIR       STAR aligner index files
+#   STAR_2_6_DIR   STAR v2.6.* aligner index files
+#   STAR_2_7_DIR   STAR v2.7.* aligner index files
 #   ATAC_DIR       sci-ATAC-seq files
 #
 # Notes:
@@ -58,7 +59,8 @@ STAGE_DIR="/net/bbi/vol1/data/genomes_stage"
 GENOME_SRC="${ORGANISM}_gsrc"
 GENOME_DIR="${STAGE_DIR}/${GROUP}/${GENOME_SRC}"
 RNA_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_rna"
-STAR_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_star"
+STAR_2_6_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_star"
+STAR_2_7_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_star_2_7"
 ATAC_DIR="${STAGE_DIR}/${GROUP}/${ORGANISM}_atac"
 
 #

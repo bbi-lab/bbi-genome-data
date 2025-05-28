@@ -35,7 +35,8 @@ source $ORGANISM_DEFINITION_FILE
 source ${SCRIPT_DIR}/all.02.definitions.sh
 source ${SCRIPT_DIR}/rna.02.definitions.sh
 source ${SCRIPT_DIR}/rna.03.make_bed_files.sh
-source ${SCRIPT_DIR}/rna.04.make_aligner_index.sh
+source ${SCRIPT_DIR}/rna.04.make_aligner_index_star_2_6.sh
+source ${SCRIPT_DIR}/rna.04.make_aligner_index_star_2_7.sh
 
 echo "The RNA-seq output files will be written to"
 echo
@@ -69,7 +70,7 @@ get_number_exons_per_transcript
 make_extended_utr_gtf
 make_scirna_pipeline_bed_files
 get_rrna_gene_annotations
-make_clean_bed_directory
+# make_clean_bed_directory
 
 popd
 
@@ -77,13 +78,26 @@ popd
 #
 # Make star index files in directory <organism>_star.
 #
-mkdir -p $STAR_DIR
+mkdir -p $STAR_2_6_DIR
 
-pushd $STAR_DIR
+pushd $STAR_2_6_DIR
 
-setup_source_files_star
-make_aligner_index
-make_clean_star_directory
+setup_source_files_star_2_6
+make_aligner_index_star_2_6
+# make_clean_star_directory
+
+popd
+
+#
+# Make star index files in directory <organism>_star_2_7.
+#
+mkdir -p $STAR_2_7_DIR
+
+pushd $STAR_2_7_DIR
+
+setup_source_files_star_2_7
+make_aligner_index_star_2_7
+# make_clean_star_directory
 
 popd
 

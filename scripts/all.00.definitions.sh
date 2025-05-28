@@ -11,7 +11,7 @@
 #
 # bbi-genome-data script version.
 #
-BBI_GENOME_DATA_VERSION="1.2.2"
+BBI_GENOME_DATA_VERSION="1.3.0"
 
 
 #
