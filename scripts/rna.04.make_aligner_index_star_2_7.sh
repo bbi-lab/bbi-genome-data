@@ -38,6 +38,7 @@ function make_aligner_index_2_7()
     GTF_GZ=${GTF_EUTR_GZ}
   fi
 
+  module load STAR/2.7.11b
   echo "STAR version: " | proc_stdout ${RECORD}
   ${STAR_ALIGNER} --version | proc_stdout ${RECORD}
 
@@ -45,7 +46,7 @@ function make_aligner_index_2_7()
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
   zcat ${GTF_GZ} > ${GTF}
 
-  echo "Build STAR genome index using ${FASTA_FINISHED} and ${GTF_GZ}..." | proc_stdout ${RECORD}
+  echo "Build STAR genome index using ${FASTA_FINISHED} and ${RNA_DIR}/tmp.transcripts.3p.UTR.extended.500.bp.gtf ..." | proc_stdout ${RECORD}
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout ${RECORD}
 
   #
