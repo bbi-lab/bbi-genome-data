@@ -31,7 +31,7 @@ function setup_source_files_star_2_7()
 }
 
 
-function make_aligner_index_2_7()
+function make_aligner_index_star_2_7()
 {
   if [ "${GENOME_SOURCE}" == "gencode" ]
   then
