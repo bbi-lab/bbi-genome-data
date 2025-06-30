@@ -2,10 +2,10 @@
 
 function setup_source_files_star_2_7()
 {
-  if [ "${GENOME_SOURCE}" == "gencode" ]
-  then
-    GTF_GZ=${GTF_EUTR_GZ}
-  fi
+#  if [ "${GENOME_SOURCE}" == "gencode" ]
+#  then
+#    GTF_GZ=${GTF_EUTR_GZ}
+#  fi
 
   echo "Make copies of and soft links to required files from ${GENOME_DIR}..." | proc_stdout
   date '+%Y.%m.%d:%H.%M.%S' | proc_stdout
@@ -16,14 +16,15 @@ function setup_source_files_star_2_7()
     exit -1
   fi
 
-  if [ ! -f "${GENOME_DIR}/${GTF_GZ}" ]
-  then
-    echo "ERROR: cannot find file ${GENOME_DIR}/${GTF_GZ}. Exiting..." | proc_stdout
-    exit -1
-  fi
+#  if [ ! -f "${GENOME_DIR}/${GTF_GZ}" ]
+#  then
+#    echo "ERROR: cannot find file ${GENOME_DIR}/${GTF_GZ}. Exiting..." | proc_stdout
+#    exit -1
+#  fi
 
   ln -s "../${GENOME_SRC}/${FASTA_FINISHED}" .
-  ln -s "../${GENOME_SRC}/${GTF_GZ}" .
+#  ln -s "../${GENOME_SRC}/${GTF_GZ}" .
+  echo "Use ${RNA_DIR}/tmp.transcripts.3p.UTR.extended.500.bp.gtf for the GTF file." >> NOTES
 
   echo | proc_stdout
   echo 'Done.' | proc_stdout
